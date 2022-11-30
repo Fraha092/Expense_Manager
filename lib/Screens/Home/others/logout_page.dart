@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class LogoutPage extends StatelessWidget {
@@ -5,6 +6,11 @@ class LogoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return GestureDetector(child: Container(),
+    onTap: ()async{
+        await FirebaseAuth.instance.signOut();
+    }
+      ,
+    );
   }
 }

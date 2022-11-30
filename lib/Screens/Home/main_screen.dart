@@ -1,23 +1,18 @@
 import 'package:expense_app/Screens/Home/category/components/category.dart';
-//import 'package:expense_app/Screens/Home/category/components/grid_search_screen.dart';
-//import 'package:expense_app/Screens/Home/nav_screen.dart';
-import 'package:expense_app/Screens/Home/payment/payment_method_page.dart';
 import 'package:expense_app/Screens/Home/transaction/transaction_filter_page.dart';
+import 'package:expense_app/Screens/Welcome/welcome_screen.dart';
+import 'package:expense_app/models/category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
-import 'category/category_chart_page.dart';
+import 'pie_chart/category_chart_page.dart';
 import 'category/category_page.dart';
 import 'expense/add_expense_page.dart';
 import 'home_screen.dart';
 import 'income/add_income_page.dart';
-//import 'main_screen.dart';
-//import 'main_screen.dart';
 import 'others/f_ques_answer_page.dart';
 import 'others/logout_page.dart';
-import 'others/rate_us_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-
+import 'others/NotificationPage.dart';
 
 class MainScreenPage extends StatefulWidget {
   late  DrawerSections currentPage;
@@ -36,28 +31,30 @@ class _MainScreenPageState extends State<MainScreenPage> {
     if (widget.currentPage == DrawerSections.home) {
       container = const HomeScreen();
     } else if (widget.currentPage == DrawerSections.addExpense) {
-      container = AddExpensePage(categoryTitle: '');
+      container = AddExpensePage(category: Cat(id: 0,name: "", icon: 0));
     } else if (widget.currentPage == DrawerSections.addIncome) {
-      container =  AddIncomePage(categoryTitle: '');
+      container =  AddIncomePage(category: IncomeCat(id: 0,name: "", icon: 0));
     } else if (widget.currentPage == DrawerSections.transactionFilter) {
-      container = const TransactionFilterPage();
+      container = const TransactionPage();
     } else if (widget.currentPage == DrawerSections.category) {
       container = const CategoryPage();
     } else if (widget.currentPage == DrawerSections.categoryChart) {
       container = const CategoryChartPage();
-    } else if (widget.currentPage == DrawerSections.paymentMethod) {
-      container = const PaymentMethodPage();
-    } else if (widget.currentPage == DrawerSections.FQA) {
+    }
+    // else if (widget.currentPage == DrawerSections.budget) {
+    //   container = const BudgetPage();
+    // }
+    else if (widget.currentPage == DrawerSections.FQA) {
       container = const QuesAnswerPage();
-    } else if (widget.currentPage == DrawerSections.rateUs) {
-      container = const RateUsPage();
+    } else if (widget.currentPage == DrawerSections.setting) {
+      container = const NotificationPage();
     } else if (widget.currentPage == DrawerSections.logOut) {
       container = const LogoutPage();
     }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        title: const Text("Expense Management App"),
+        title: const Text("Expense Manager"),
       ),
       body: container,
       drawer: Drawer(
@@ -105,16 +102,16 @@ class _MainScreenPageState extends State<MainScreenPage> {
               widget.currentPage == DrawerSections.category ? true : false),
           menuItem(6, "Category Chart", Icons.pie_chart,
               widget.currentPage == DrawerSections.categoryChart ? true : false),
-          menuItem(7, " Payment Method", Icons.payments,
-              widget.currentPage == DrawerSections.rateUs ? true : false),
+          // menuItem(7, " Budget", Icons.payments,
+          //     widget.currentPage == DrawerSections.budget ? true : false),
           const Divider(),
-          menuItem(8, "FQA", Icons.question_answer,
-              widget.currentPage == DrawerSections.FQA ? true : false),
-          menuItem(9, " Rate Us", Icons.star_rate,
-              widget.currentPage == DrawerSections.rateUs ? true : false),
+          // menuItem(8, "FQA", Icons.question_answer,
+          //     widget.currentPage == DrawerSections.FQA ? true : false),
+          menuItem(7, " Setting", Icons.settings,
+              widget.currentPage == DrawerSections.setting ? true : false),
           const Divider(),
 
-          menuItem(10, "Logout", Icons.exit_to_app,
+          menuItem(8, "Logout", Icons.exit_to_app,
               widget.currentPage == DrawerSections.logOut ? true : false),
         ],
       ),
@@ -136,7 +133,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return AddExpensePage(categoryTitle: '');
+                    return AddExpensePage(category: Cat(id: 0, name: "", icon: 0));
                   })
               );
             } else if (id == 3) {
@@ -144,7 +141,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return AddIncomePage(categoryTitle: '');
+                    return AddIncomePage(category: IncomeCat(id: 0, name: "", icon: 0));
                   })
               );
             } else if (id == 4) {
@@ -152,7 +149,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const TransactionFilterPage();
+                    return const TransactionPage();
 
                   })
               );
@@ -166,22 +163,47 @@ class _MainScreenPageState extends State<MainScreenPage> {
                   })
               );
             } else if (id == 6) {
-              widget.currentPage = DrawerSections.categoryChart;
-            } else if (id == 7) {
-             // widget.currentPage = DrawerSections.paymentMethod;
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const PaymentMethodPage();
+                    return const CategoryChartPage();
                     //return const GridSearchScreen();
                   })
               );
-            }else if (id == 8) {
-              widget.currentPage = DrawerSections.FQA;
-            } else if (id == 9) {
-              widget.currentPage = DrawerSections.rateUs;
-            } else if (id == 10) {
-              widget.currentPage = DrawerSections.logOut;
+             // widget.currentPage = DrawerSections.categoryChart;
+            }
+            // else if (id == 7) {
+            //  // widget.currentPage = DrawerSections.paymentMethod;
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) {
+            //         return const BudgetPage();
+            //         //return const GridSearchScreen();
+            //       })
+            //   );
+            // }
+            // else if (id == 8) {
+            //   widget.currentPage = DrawerSections.FQA;
+            // }
+            else if (id == 7) {
+              //widget.currentPage = DrawerSections.notification;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const NotificationPage();
+                    //return const GridSearchScreen();
+                  })
+              );
+            } else if (id == 8) {
+              _signOut();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const WelcomeScreen();
+                    //return const GridSearchScreen();
+                  })
+              );
+           //   widget.currentPage = DrawerSections.logOut;
             }
           });
         },
@@ -206,8 +228,12 @@ enum DrawerSections {
   transactionFilter,
   category,
   categoryChart,
-  paymentMethod,
+  // budget,
   FQA,
-  rateUs,
+  setting,
   logOut,
+}
+
+Future<void> _signOut() async {
+  await FirebaseAuth.instance.signOut();
 }

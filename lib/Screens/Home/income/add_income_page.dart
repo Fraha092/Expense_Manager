@@ -3,14 +3,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/income/components/category.dart';
 import 'package:expense_app/constants.dart';
+import 'package:expense_app/models/category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+
+import '../transaction/transaction_filter_page.dart';
 
 
 class AddIncomePage extends StatefulWidget {
-  String categoryTitle = "";
-   AddIncomePage( {Key? key, required this.categoryTitle,}) : super(key: key);
+  IncomeCat category;
+   AddIncomePage( {Key? key, required this.category,}) : super(key: key);
   @override
   State<AddIncomePage> createState() => _AddIncomePageState();
 }
@@ -22,16 +26,20 @@ class _AddIncomePageState extends State<AddIncomePage> {
 
  static final _income=TextEditingController();
   static final _category=TextEditingController();
-  //static final _paymentMethod=TextEditingController();
   static final _dates=TextEditingController();
   static final _times=TextEditingController();
   static final _notes=TextEditingController();
 
+  int iconId = 0;
+
   @override
   void initState(){
+    _income.clear();
+    _notes.clear();
     _dates.text="";
     _times.text = "";
-    _category.text = widget.categoryTitle;
+    _category.text = widget.category.name;
+    iconId = widget.category.icon;
     super.initState();
   }
   @override
@@ -85,6 +93,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       decoration:  InputDecoration(
                         labelText: 'Category',
                         hintText: "Category",
+                        prefixIcon:  iconId==0? null :Icon(IconDataSolid(iconId)),
                         suffixIcon: GestureDetector(
                             onTap: (){
                               Navigator.push(
@@ -109,72 +118,9 @@ class _AddIncomePageState extends State<AddIncomePage> {
                         ),
 
                       ),
+                      readOnly: true,
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: TextFormField(
-                  //     controller: _paymentMethod,
-                  //     textInputAction: TextInputAction.next,
-                  //     cursorColor: kPrimaryColor,
-                  //     onSaved: (payment){
-                  //     },
-                  //     decoration: const InputDecoration(
-                  //       labelText: 'Payment Method',
-                  //       hintText: "Required",
-                  //       suffixIcon: Icon(Icons.payments),
-                  //       contentPadding: EdgeInsets.all(20),
-                  //       enabledBorder: UnderlineInputBorder(
-                  //           borderSide: BorderSide(color: Colors.teal,width: 2,)
-                  //       ),
-                  //       focusedBorder: UnderlineInputBorder(
-                  //           borderSide: BorderSide(color: Colors.teal,width: 2,)
-                  //       ),
-                  //       labelStyle: TextStyle(
-                  //           fontSize: 15,fontWeight: FontWeight.normal,
-                  //           color: Colors.teal
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   alignment: Alignment.center,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     child:  Column(
-                  //       children: [
-                  //         DecoratedBox(
-                  //           decoration: BoxDecoration(
-                  //               color: Colors.teal.shade50,
-                  //               borderRadius: BorderRadius.circular(5)
-                  //           ),
-                  //           child: Padding(
-                  //             padding: const EdgeInsets.all(8.0),
-                  //             child: DropdownButton(
-                  //               isExpanded: true,
-                  //               icon: const Icon(Icons.payments,color: Colors.teal,),
-                  //               // underline: ,
-                  //               hint: const Center(child: Text('Select Payment Method',
-                  //                 style: TextStyle(color: Colors.teal),)),
-                  //               value: _payment,
-                  //               onChanged: (newValue) {
-                  //                 setState(() {
-                  //                   _payment = newValue!;
-                  //                 });
-                  //               },
-                  //               items: paymentList.map((location) {
-                  //                 return DropdownMenuItem(
-                  //                   value: location,
-                  //                   child: Text(location),
-                  //                 );
-                  //               }).toList(),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -240,7 +186,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                           if (kDebugMode) {
                             print(pickedDate);
                           }
-                          String formattedDate=DateFormat('yyyy/MM/dd').format(pickedDate);
+                          String formattedDate=DateFormat('yyyy-MM-dd').format(pickedDate);
                           if (kDebugMode) {
                             print(formattedDate);
                           }
@@ -307,7 +253,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                                 style: TextButton.styleFrom(foregroundColor: Colors.white, ),
                                  onPressed: () async{
                                    Map<String,dynamic>data={
-                                     "income":_income.text,
+                                     "income": double.parse(_income.text),
                                      "category":_category.text,
                                      "notes":_notes.text,
                                      "dates":_dates.text,
@@ -318,6 +264,17 @@ class _AddIncomePageState extends State<AddIncomePage> {
                                      print("_addIncome   $data");
                                    }
                                    _addIncome.add(data);
+
+                                   ScaffoldMessenger.of(context)
+                                       .showSnackBar(const SnackBar(content: Text("New Income Saved!")));
+                                   Navigator.of(context).pop();
+
+
+                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                     return const TransactionPage();
+                                   }
+                                   )
+                                   );
 
                                  },
                                 child: const Text("Save"),

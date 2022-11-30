@@ -2,13 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import '../../../models/category.dart';
 import '../category/components/category.dart';
+import '../transaction/transaction_filter_page.dart';
+
 
 class AddExpensePage extends StatefulWidget {
 
-  String categoryTitle = "";
-  AddExpensePage({Key? key, required this.categoryTitle}) : super(key: key);
+  Cat category;
+  AddExpensePage({Key? key, required this.category}) : super(key: key);
 
   @override
   State<AddExpensePage> createState() => _AddExpensePageState();
@@ -16,12 +20,9 @@ class AddExpensePage extends StatefulWidget {
 
 class _AddExpensePageState extends State<AddExpensePage> {
 
-  final CollectionReference _addExpense=
-  FirebaseFirestore.instance.collection('add_expense');
-
+  final CollectionReference _addExpense = FirebaseFirestore.instance.collection('add_expense');
   static final _expense=TextEditingController();
   static final _category=TextEditingController();
- // static final _paymentMethod=TextEditingController();
   static final _dates=TextEditingController();
   static final _times=TextEditingController();
   static final _notes=TextEditingController();
@@ -29,14 +30,24 @@ class _AddExpensePageState extends State<AddExpensePage> {
   List<String>paymentList = ['Select Payment Method', 'Bank','Card','Cash','Others'
   ];
   String _payment='Select Payment Method';
-
+  int iconId = 0;
   @override
   void initState(){
+
+    _expense.clear();
+    _notes.clear();
     _dates.text="";
     _times.text = "";
-    _category.text = widget.categoryTitle;
+    _category.text = widget.category.name;
+    iconId = widget.category.icon;
     super.initState();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +109,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                         //   onTap:(){},
                         //   child:Text("Your Text"),
                         // ),
+                        prefixIcon:  iconId==0? null :Icon(IconDataSolid(iconId)),
                         suffixIcon: GestureDetector( onTap:(){
                           Navigator.push(
                             context,
@@ -121,6 +133,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                         ),
 
                       ),
+                      readOnly: true,
                     ),
                   ),
                    Container(
@@ -131,16 +144,18 @@ class _AddExpensePageState extends State<AddExpensePage> {
                         children: [
                           DecoratedBox(
                             decoration: BoxDecoration(
-                              color: Colors.teal.shade50,
-                              borderRadius: BorderRadius.circular(5)
+                              color: kPrimaryLightColor,
+                              borderRadius: BorderRadius.circular(5),
+
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: DropdownButton(
+
                                 isExpanded: true,
                                icon: const Icon(Icons.payments,color: Colors.teal,),
                                // underline: ,
-                                hint: const Center(child: Text('Select Payment Method',
+                                hint: const Center(child: Text('Payment Method',
                                   style: TextStyle(color: Colors.teal),)),
                                 value: _payment,
                                 onChanged: (newValue) {
@@ -151,7 +166,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                 items: paymentList.map((location) {
                                   return DropdownMenuItem(
                                     value: location,
-                                    child: Text(location),
+                                    child: Text(location,style: TextStyle(color: Colors.teal),),
                                   );
                                 }).toList(),
                               ),
@@ -224,7 +239,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                               if (kDebugMode) {
                                 print(pickedDate);
                               }
-                              String formattedDate=DateFormat('yyyy/MM/dd').format(pickedDate);
+                              String formattedDate=DateFormat('yyyy-MM-dd').format(pickedDate);
                               if (kDebugMode) {
                                 print(formattedDate);
                               }
@@ -284,18 +299,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Material(
-                            color: Colors.teal[600],
+                            //color: Colors.teal[600],
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Center(
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.white, //backgroundColor: Colors.green,
-                                  ),
+                                child: MaterialButton(
+                                  color: Colors.teal,
                                   onPressed:() async{
                                     Map<String,dynamic>data={
-                                      "expense":_expense.text,
+                                      "expense":double.parse(_expense.text),
                                       "category":_category.text,
                                       "notes":_notes.text,
                                       "dates":_dates.text,
@@ -306,11 +319,25 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                       print("_addExpense   $data");
                                     }
                                     _addExpense.add(data);
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(content: Text("New Expense Saved!")));
+                                     Navigator.of(context).pop();
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return const TransactionPage();
+
+                                        }
+
+                                    )
+                                    );
                                   },
-                                  child: const Text("Save"),
+                                  child: const Text('Save',style: TextStyle(color: Colors.white),),
+
                                 )
                             ),
-                          )
+                          ),
+
                         ],
                       ),
                     ),

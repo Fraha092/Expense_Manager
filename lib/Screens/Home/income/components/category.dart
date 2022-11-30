@@ -1,13 +1,10 @@
+import 'package:expense_app/Screens/Home/category/service/CommonServiceIncome.dart';
 import 'package:expense_app/Screens/Home/income/add_income_page.dart';
+import 'package:expense_app/constants.dart';
+import 'package:expense_app/models/category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-class IncomeCat {
-  final int index;
-  final String name;
-  final IconData icon;
-
-  IncomeCat(this.index, this.name, this.icon);
-}
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class IncomeCategoryScreen extends StatefulWidget {
@@ -18,19 +15,22 @@ class IncomeCategoryScreen extends StatefulWidget {
 }
 
 class _IncomeCategoryScreenState extends State<IncomeCategoryScreen> {
+
   final TextEditingController _searchController = TextEditingController();
-
-  final List<IncomeCat>incomeCatList=[
-    IncomeCat(0, "Allowance", Icons.card_giftcard),
-    IncomeCat(1, "Bonus", Icons.paid_outlined),
-    IncomeCat(2, "Business", Icons.business),
-    IncomeCat(3, "Investment Income", Icons.savings_outlined),
-    IncomeCat(4, "Other Income", Icons.credit_card_outlined),
-    IncomeCat(6, "Pension", Icons.local_atm_outlined),
-    IncomeCat(7, "Salary", Icons.wallet),
-  ];
+  final CommonServiceIncome _commonServiceIncome = CommonServiceIncome();
 
 
+  // final List<IncomeCat>incomeCatList=[
+  //   IncomeCat(0, "Allowance", Icons.card_giftcard,KPrimaryMidLevelColor),
+  //   IncomeCat(1, "Bonus", Icons.paid_outlined,KPrimaryMidLevelColor),
+  //   IncomeCat(2, "Business", Icons.business,KPrimaryMidLevelColor),
+  //   IncomeCat(3, "Investment Income", Icons.savings_outlined,KPrimaryMidLevelColor),
+  //   IncomeCat(4, "Other Income", Icons.credit_card_outlined,KPrimaryMidLevelColor),
+  //   IncomeCat(6, "Pension", Icons.local_atm_outlined,KPrimaryMidLevelColor),
+  //   IncomeCat(7, "Salary", Icons.wallet,KPrimaryMidLevelColor),
+  // ];
+
+  List<IncomeCat> incomeCatList =  [];
   List<IncomeCat>? incomeCatListSearch;
   final FocusNode _textFocusNode = FocusNode();
 
@@ -38,9 +38,20 @@ class _IncomeCategoryScreenState extends State<IncomeCategoryScreen> {
   void dispose() {
     _textFocusNode.dispose();
     _searchController.dispose();
-
     super.dispose();
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    //  _commonService.retrieveCategories()
+    //      .then((value) =>
+    //     catList = value,
+    // );
+    print("CommonServiceIncome 2 ${incomeCatList.length}");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,167 +108,75 @@ class _IncomeCategoryScreenState extends State<IncomeCategoryScreen> {
                   child: _searchController.text.isNotEmpty &&
                       incomeCatListSearch!.isEmpty
                       ? const Center()
-                      : ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _searchController.text.isNotEmpty
-                          ? incomeCatListSearch!.length
-                          : incomeCatList.length,
-                      itemBuilder: (context, index) {
-                        // late String position=index.toString();
-                        //  if(_searchController.text.isEmpty){
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              //  print("catListSearch" +  catListSearch![index]! + catList[index]);
-                              print("${incomeCatListSearch?[index].name} ${incomeCatListSearch?[index].icon}  "
-                                  "${incomeCatList[index].name} ${incomeCatList[index].icon}");
-                              //Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return AddIncomePage(categoryTitle: incomeCatList[index].name, );
-                                  },
-                                ),
-                              );
-                            });
-                          },
-                          child: Card(
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.orange.shade50,
-                                child: Icon(
-                                  incomeCatList[index].icon,
-                                  size: 22,
-                                  color: Colors.brown.shade800,
-                                ),
-                              ),
-                              // title: Text(_searchController.text.isNotEmpty? catListSearch![index]:catList[index])
-                              title: Text(
-                                incomeCatList[index].name.toString(),
-                                //textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 18, color: Colors.brown),
-                              ),
-                            ),
-                          ),
-                        );
-                      }))
+                      : FutureBuilder<List<IncomeCat>>(
+                        future: _commonServiceIncome.retrieveCategories(),
+                                 builder: (context,future) {
+                              print("future   ${future.data?.length}");
+                                   if(!future.hasData) {
+                                    return Container();
+                                   } else {
+                                     incomeCatList = future.data!;
+
+
+                                     return ListView.builder(
+                                         shrinkWrap: true,
+                                         itemCount: _searchController.text
+                                             .isNotEmpty
+                                             ? incomeCatListSearch!.length
+                                             : incomeCatList.length,
+                                         itemBuilder: (context, index) {
+                                           return Card(
+                                             child: ListTile(
+
+                                                 onTap: () async {
+                                                   setState(() {
+                                                     print(
+                                                         "incomeCatListSearch  ${incomeCatListSearch?[index].name}  ${incomeCatList[index].name}");
+                                                     Navigator.pop(context);
+                                                     Navigator.pushReplacement(
+                                                       context,
+                                                       MaterialPageRoute(
+                                                         builder: (context) {
+                                                           return AddIncomePage(
+                                                               category: _searchController.text.isNotEmpty
+                                                                   ? incomeCatListSearch![index]
+                                                                   : incomeCatList[index]
+                                                           );
+                                                         },
+                                                       ),
+                                                     );
+                                                   });
+                                                 },
+                                                 leading: CircleAvatar(
+                                                     backgroundColor: KPrimaryMidLevelColor,
+                                                     child: Icon(IconDataSolid(
+                                                         _searchController.text
+                                                             .isNotEmpty
+                                                             ? incomeCatListSearch![index]
+                                                             .icon
+                                                             : incomeCatList[index]
+                                                             .icon),size: 16,)
+
+                                                 ),
+                                                 // title: Text(_searchController.text.isNotEmpty? catListSearch![index]:catList[index])
+                                                 title: Text(
+                                                     _searchController.text
+                                                         .isNotEmpty
+                                                         ? incomeCatListSearch![index]
+                                                         .name
+                                                         : incomeCatList[index]
+                                                         .name)
+
+                                             ),
+                                           );
+                                         });
+                                   }
+                                   },)
+              )
             ],
           ),
         ),
       ),
-
-
-
-
-
-
-
-
-
-
-
-      // body: Padding(
-      //   padding: const EdgeInsets.all(8.0),
-      //   child: Container(
-      //     padding: EdgeInsets.symmetric(horizontal: 15,),
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       children:  <Widget>[
-      //         Container(
-      //           padding: EdgeInsets.symmetric(horizontal: 15),
-      //           decoration: BoxDecoration(
-      //             color: Colors.white,
-      //             borderRadius: BorderRadius.circular(30),
-      //           ),
-      //           child: TextFormField(
-      //             controller: _searchController,
-      //             focusNode: _textFocusNode,
-      //             decoration: InputDecoration(
-      //               contentPadding: EdgeInsets.all(0),
-      //               prefixIcon: Icon(Icons.search,color: Colors.black12,
-      //               size: 20),
-      //               prefixIconConstraints: BoxConstraints(
-      //                   maxHeight: 20,
-      //                   maxWidth: 25),
-      //               border: InputBorder.none,
-      //               hintText: 'Search',
-      //               hintStyle: TextStyle(color: Colors.grey)
-      //             ),
-      //               onChanged: (value) {
-      //               setState(() {
-      //                 incomeCatListSearch = incomeCatList
-      //                    .where((element) => element.name
-      //                     .toLowerCase()
-      //                     .contains(value.toLowerCase()))
-      //                      .toList();
-      //                 if (_searchController.text.isNotEmpty &&
-      //                       incomeCatListSearch!.isEmpty) {
-      //                   if (kDebugMode) {
-      //                      print('itemListSearch Length ${incomeCatListSearch!.length}');
-      //                   }
-      //                 }
-      //               }
-      //             );
-      //           },
-      //           ),
-      //         ),
-      //         Expanded(
-      //             child: _searchController.text.isNotEmpty &&
-      //                 incomeCatListSearch!.isEmpty
-      //                 ? const Center()
-      //                 : ListView.builder(
-      //                 shrinkWrap: true,
-      //                 itemCount: _searchController.text.isNotEmpty
-      //                     ? incomeCatListSearch!.length
-      //                     : incomeCatList.length,
-      //                 itemBuilder: (context, index) {
-      //                   // late String position=index.toString();
-      //                   //  if(_searchController.text.isEmpty){
-      //                   return GestureDetector(
-      //                     onTap: () {
-      //                       setState(() {
-      //                         //  print("catListSearch" +  catListSearch![index]! + catList[index]);
-      //                         print("${incomeCatListSearch?[index].name}  ${incomeCatList[index].name}");
-      //                         //Navigator.pop(context);
-      //                         Navigator.pushReplacement(
-      //                           context,
-      //                           MaterialPageRoute(
-      //                             builder: (context) {
-      //                               return AddIncomePage(categoryTitle: incomeCatList[index].name,);
-      //                             },
-      //                           ),
-      //                         );
-      //                       });
-      //                     },
-      //                     child: Card(
-      //                       child: ListTile(
-      //                         leading: CircleAvatar(
-      //                           backgroundColor: Colors.orange.shade50,
-      //                           child: Icon(
-      //                             incomeCatList[index].icon,
-      //                             size: 22,
-      //                             color: Colors.brown.shade800,
-      //                           ),
-      //                         ),
-      //                         // title: Text(_searchController.text.isNotEmpty? catListSearch![index]:catList[index])
-      //                         title: Text(
-      //                           '${incomeCatList[index]}',
-      //                           //incomeCatList[index].name.toString(),
-      //                           //textAlign: TextAlign.center,
-      //                           style: const TextStyle(
-      //                               fontSize: 18, color: Colors.teal),
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   );
-      //                 }))
-      //        ],
-      //     ),
-      //
-      //   ),
-      // ),
 
     );
   }

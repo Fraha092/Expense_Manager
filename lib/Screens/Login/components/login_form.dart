@@ -1,13 +1,40 @@
+import 'package:expense_app/Screens/Home/category/service/CommonService.dart';
+import 'package:expense_app/Screens/Home/category/service/CommonServiceIncome.dart';
 import 'package:expense_app/services/auth.dart';
-import 'package:expense_app/Screens/Home/nav_screen.dart';
+//import 'package:expense_app/Screens/Home/nav_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../components/existing_an_account.dart';
 import '../../../constants.dart';
 import '../../../models/loginuser.dart';
 import '../../Home/main_screen.dart';
 import '../../Signup/signup_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+
+class SecureStorage {
+  // Create storage
+  final storage = const FlutterSecureStorage();
+
+  final String _keyUserName = 'username';
+  final String _keyPassWord = 'password';
+
+  Future setUserName(String username) async {
+    await storage.write(key: _keyUserName, value: username);
+  }
+
+  Future<String?> getUserName() async {
+    return await storage.read(key: _keyUserName);
+  }
+
+  Future setPassWord(String password) async {
+    await storage.write(key: _keyPassWord, value: password);
+  }
+
+  Future<String?> getPassWord() async {
+    return await storage.read(key: _keyPassWord);
+  }
+}
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -20,11 +47,26 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _email = TextEditingController();
   final _password = TextEditingController();
-  final AuthService _auth = new AuthService();
+  final SecureStorage _secureStorage=SecureStorage();
+  final AuthService _auth = AuthService();
+  final CommonService _commonService = CommonService();
+  final CommonServiceIncome _commonServiceIncome=CommonServiceIncome();
+  @override
+  void initState() {
+    super.initState();
+    fetchSecureStorageData();
+  }
+
+  Future<void> fetchSecureStorageData() async {
+    _email.text = await _secureStorage.getUserName() ?? '';
+    _password.text = await _secureStorage.getPassWord() ?? '';
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      //key: _fo,
       child: Column(
         children: [
           TextFormField(
@@ -42,10 +84,10 @@ class _LoginFormState extends State<LoginForm> {
             cursorColor: kPrimaryColor,
             onSaved: (email)
             {},
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Your email",
               prefixIcon: Padding(
-                padding: const EdgeInsets.all(defaultPadding),
+                padding: EdgeInsets.all(defaultPadding),
                 child: Icon(Icons.person),
               ),
             ),
@@ -57,10 +99,10 @@ class _LoginFormState extends State<LoginForm> {
               textInputAction: TextInputAction.done,
               obscureText: true,
               cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Your password",
                 prefixIcon: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
+                  padding: EdgeInsets.all(defaultPadding),
                   child: Icon(Icons.lock),
                 ),
               ),
@@ -71,6 +113,8 @@ class _LoginFormState extends State<LoginForm> {
             tag: "login_btn",
             child: ElevatedButton(
               onPressed: () async {
+                await _secureStorage.setUserName(_email.text);
+                await _secureStorage.setPassWord(_password.text);
                //  final prefs= await SharedPreferences.getInstance();
                // prefs.setBool('isLoggedIn',true);
                 dynamic result = await _auth.signInEmailPassword(LoginUser(email: _email.text,password: _password.text));
@@ -83,6 +127,8 @@ class _LoginFormState extends State<LoginForm> {
                         );
                       });
                 }else{
+                  _commonService.saveCategories();
+                  _commonServiceIncome.saveCategoriesIn();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -105,7 +151,7 @@ class _LoginFormState extends State<LoginForm> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return SignUpScreen();
+                    return const SignUpScreen();
                   },
                 ),
               );

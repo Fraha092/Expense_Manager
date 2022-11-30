@@ -38,7 +38,18 @@ dependencies:
   font_awesome_flutter: ^10.2.1
   shared_preferences: ^2.0.15
   flutter_secure_storage: ^6.0.0
-
+  pie_chart: ^5.3.2
+  rxdart: ^0.27.5
+  multi_stream_builder: ^0.0.1
+  get: ^4.6.5
+  date_range_picker: ^1.0.7
+  settings_ui: ^2.0.2
+  android_alarm_manager_plus: ^2.1.0
+  flutter_local_notifications: ^9.6.0
+  timezone: ^0.8.0
+  pdf: ^3.8.4
+  path_provider: ^2.0.11
+  open_document: ^1.0.5
 
 
   flutter:

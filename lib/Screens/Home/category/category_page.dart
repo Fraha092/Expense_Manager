@@ -9,11 +9,6 @@ class CategoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.white70,
         title: const Text("Category"),
-        // actions: [
-        //   IconButton(onPressed: ()=> Navigator.of(context).
-        //   push(MaterialPageRoute(builder: (_)=> const GridSearchScreen())),
-        //       icon: const Icon(Icons.search))
-        // ],
       ),body: CategoryScreen(),
     );
 
