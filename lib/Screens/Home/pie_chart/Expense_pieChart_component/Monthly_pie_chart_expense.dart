@@ -24,8 +24,8 @@ class _MonthlyExpensePieChartState extends State<MonthlyExpensePieChart> {
   List<ExpenseIncome> expenseIncomeList2 = [];
 
   DateTimeRange dateRange=DateTimeRange(
-      start: DateTime(2022,11,01),
-      end: DateTime(2022,11,30)
+      start: DateTime(2022,12,01),
+      end: DateTime(2022,12,31)
   );
 
   int key=0;

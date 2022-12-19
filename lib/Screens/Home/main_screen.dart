@@ -1,12 +1,13 @@
-import 'package:expense_app/Screens/Home/category/components/category.dart';
 import 'package:expense_app/Screens/Home/transaction/transaction_filter_page.dart';
 import 'package:expense_app/Screens/Welcome/welcome_screen.dart';
 import 'package:expense_app/models/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
+import 'Budget/Budget_page.dart';
+import 'others/Profile_Setting.dart';
+import 'others/ruffPage.dart';
 import 'pie_chart/category_chart_page.dart';
-import 'category/category_page.dart';
 import 'expense/add_expense_page.dart';
 import 'home_screen.dart';
 import 'income/add_income_page.dart';
@@ -36,44 +37,61 @@ class _MainScreenPageState extends State<MainScreenPage> {
       container =  AddIncomePage(category: IncomeCat(id: 0,name: "", icon: 0));
     } else if (widget.currentPage == DrawerSections.transactionFilter) {
       container = const TransactionPage();
-    } else if (widget.currentPage == DrawerSections.category) {
-      container = const CategoryPage();
-    } else if (widget.currentPage == DrawerSections.categoryChart) {
+    }
+    else if (widget.currentPage == DrawerSections.budget) {
+      container = BudgetPage();
+    }
+    else if (widget.currentPage == DrawerSections.categoryChart) {
       container = const CategoryChartPage();
     }
-    // else if (widget.currentPage == DrawerSections.budget) {
-    //   container = const BudgetPage();
+    // else if (widget.currentPage == DrawerSections.profile) {
+    //   container = const ProfileSettingPage();
     // }
+    else if (widget.currentPage == DrawerSections.profile) {
+      container = const ProfileSettingPage();
+    }
     else if (widget.currentPage == DrawerSections.FQA) {
       container = const QuesAnswerPage();
     } else if (widget.currentPage == DrawerSections.setting) {
       container = const NotificationPage();
-    } else if (widget.currentPage == DrawerSections.logOut) {
+    }
+    else if (widget.currentPage == DrawerSections.setting) {
+      container = NewBudget();
+    }
+    else if (widget.currentPage == DrawerSections.logOut) {
       container = const LogoutPage();
     }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        title: const Text("Expense Manager"),
+        title: const Text("Expense Management"),
+        toolbarHeight: 80.0,
+
       ),
       body: container,
       drawer: Drawer(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              UserAccountsDrawerHeader(accountName: const Text("Homiyo"),
-                accountEmail: const Text("homiyo@gmail.com"),
-                currentAccountPicture: CircleAvatar(
-                 child: ClipOval(
-                  child: Image.network('https://i0.wp.com/theubj.com/wp-content/uploads/2022/09/Chainsaw-Man-Season-1.jpg?resize=750%2C375&ssl=1',
-                  fit: BoxFit.cover,width: 90,height: 90,
-                  )
-                 )
-     ),
+     //          UserAccountsDrawerHeader(accountName: const Text("Homiyo"),
+     //            accountEmail: const Text("homiyo@gmail.com"),
+     //            currentAccountPicture: CircleAvatar(
+     //             child: ClipOval(
+     //              child: Image.network('https://i0.wp.com/theubj.com/wp-content/uploads/2022/09/Chainsaw-Man-Season-1.jpg?resize=750%2C375&ssl=1',
+     //              fit: BoxFit.cover,width: 90,height: 90,
+     //              )
+     //             )
+     // ),
+     //
+     //      decoration: const BoxDecoration(
+     //        color: Colors.teal,
+     //          ),
+     //          ),
+              SizedBox(
+                height: 180,
+                width: 100,
+               // child: ProfileSettingPage(),
 
-          decoration: const BoxDecoration(
-            color: Colors.teal,
-              ),
               ),
               MyDrawerList(),
             ],
@@ -98,20 +116,22 @@ class _MainScreenPageState extends State<MainScreenPage> {
               widget.currentPage == DrawerSections.addIncome ? true : false),
           menuItem(4, "Transaction Filter", Icons.list,
               widget.currentPage == DrawerSections.transactionFilter ? true : false),
-          menuItem(5, "Category", Icons.category,
-              widget.currentPage == DrawerSections.category ? true : false),
+          menuItem(5, "Budget", Icons.balance,
+              widget.currentPage == DrawerSections.budget ? true : false),
           menuItem(6, "Category Chart", Icons.pie_chart,
               widget.currentPage == DrawerSections.categoryChart ? true : false),
-          // menuItem(7, " Budget", Icons.payments,
-          //     widget.currentPage == DrawerSections.budget ? true : false),
+          menuItem(7, " Profile", Icons.payments,
+              widget.currentPage == DrawerSections.profile ? true : false),
           const Divider(),
           // menuItem(8, "FQA", Icons.question_answer,
           //     widget.currentPage == DrawerSections.FQA ? true : false),
-          menuItem(7, " Setting", Icons.settings,
+          menuItem(8, " Setting", Icons.settings,
               widget.currentPage == DrawerSections.setting ? true : false),
+          menuItem(9, " Ruff", Icons.gavel_rounded,
+              widget.currentPage == DrawerSections.ruff ? true : false),
           const Divider(),
 
-          menuItem(8, "Logout", Icons.exit_to_app,
+          menuItem(10, "Logout", Icons.exit_to_app,
               widget.currentPage == DrawerSections.logOut ? true : false),
         ],
       ),
@@ -153,16 +173,17 @@ class _MainScreenPageState extends State<MainScreenPage> {
 
                   })
               );
-            } else if (id == 5) {
-              //widget.currentPage = DrawerSections.category;
+            }
+            else if (id == 5) {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const CategoryScreen();
+                    return BudgetPage();
                     //return const GridSearchScreen();
                   })
               );
-            } else if (id == 6) {
+            }
+            else if (id == 6) {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
@@ -172,20 +193,20 @@ class _MainScreenPageState extends State<MainScreenPage> {
               );
              // widget.currentPage = DrawerSections.categoryChart;
             }
-            // else if (id == 7) {
-            //  // widget.currentPage = DrawerSections.paymentMethod;
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) {
-            //         return const BudgetPage();
-            //         //return const GridSearchScreen();
-            //       })
-            //   );
-            // }
+            else if (id == 7) {
+             // widget.currentPage = DrawerSections.paymentMethod;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const ProfileSettingPage();
+                    //return const GridSearchScreen();
+                  })
+              );
+            }
             // else if (id == 8) {
             //   widget.currentPage = DrawerSections.FQA;
             // }
-            else if (id == 7) {
+            else if (id == 8) {
               //widget.currentPage = DrawerSections.notification;
               Navigator.push(
                   context,
@@ -194,7 +215,18 @@ class _MainScreenPageState extends State<MainScreenPage> {
                     //return const GridSearchScreen();
                   })
               );
-            } else if (id == 8) {
+            }
+            else if (id == 9) {
+              //widget.currentPage = DrawerSections.notification;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return NewBudget();
+                    //return const GridSearchScreen();
+                  })
+              );
+            }
+            else if (id == 10) {
               _signOut();
               Navigator.push(
                   context,
@@ -226,11 +258,12 @@ enum DrawerSections {
   addExpense,
   addIncome,
   transactionFilter,
-  category,
+  budget,
   categoryChart,
-  // budget,
+  profile,
   FQA,
   setting,
+  ruff,
   logOut,
 }
 

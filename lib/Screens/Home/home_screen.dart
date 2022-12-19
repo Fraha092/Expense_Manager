@@ -19,12 +19,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+
+  DateTimeRange dateRange=DateTimeRange(
+      start: DateTime(2022,12,01),
+      end: DateTime(2022,12,31)
+  );
   double totalIncome = 0;
   double totalExpense=0;
   double balance=0;
 
   ExpenseIncomeService expenseIncomeService = ExpenseIncomeService();
   List<ExpenseIncome> expenseIncomeList = [];
+
+
 
   @override
   void initState() {
@@ -173,6 +180,26 @@ class _HomeScreenState extends State<HomeScreen> {
             Card(
             child: Column(
               children: <Widget>[
+                // Container(
+                //   height:45,
+                //   width:350,
+                //   decoration: BoxDecoration(
+                //       border: Border.all(
+                //         color: Colors.black, //color of border
+                //         width: 1, //width of border
+                //       ),
+                //       borderRadius: BorderRadius.zero
+                //   ),
+                //   child: Column(
+                //     children: [
+                //       Text("All Cost",
+                //         style: TextStyle(fontSize: 16,color: Colors.green.shade900),
+                //         textAlign: TextAlign.center,),
+                //     ],
+                //   ),
+                // ),
+                Divider(color: Colors.indigo.shade900,),
+                //Text("ALL"),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -226,39 +253,151 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height:45,
-                        width:350,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black, //color of border
-                              width: 1, //width of border
-                            ),
-                            borderRadius: BorderRadius.zero
-                        ),
-                        child: Center(child: Text('Previous Balance',style: TextStyle(color: Colors.black,fontSize: 16),)),
-                      ),
-                    ),Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height:45,
-                        width:350,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black, //color of border
-                              width: 1, //width of border
-                            ),
-                            borderRadius: BorderRadius.zero
-                        ),
-                        child: const Center(child: Text('Balance',style: TextStyle(color: Colors.black,fontSize: 16),)),
-                      ),
-                    ),
+                // Text("Monthly"),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Column(
+                //           children: [
+                //             Text("Total Income  ${totalIncome()}",
+                //               style: TextStyle(fontSize: 16,color: Colors.green.shade900),
+                //               textAlign: TextAlign.center,),
+                //           ],
+                //         ),
+                //       ),
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Text("Total Expense  $totalExpense",
+                //           style: TextStyle(fontSize: 16,color: Colors.red.shade900),
+                //           textAlign: TextAlign.center,),
+                //       ),
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Text("Balance  \n$balance",
+                //           style: TextStyle(fontSize: 16,color: Colors.black,),
+                //           textAlign: TextAlign.center,),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // Text("Yearly"),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Column(
+                //           children: [
+                //             Text("Total Income  $totalIncome",
+                //               style: TextStyle(fontSize: 16,color: Colors.green.shade900),
+                //               textAlign: TextAlign.center,),
+                //           ],
+                //         ),
+                //       ),
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Text("Total Expense  $totalExpense",
+                //           style: TextStyle(fontSize: 16,color: Colors.red.shade900),
+                //           textAlign: TextAlign.center,),
+                //       ),
+                //       Container(
+                //         height:50,
+                //         width:105,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Text("Balance  \n$balance",
+                //           style: TextStyle(fontSize: 16,color: Colors.black,),
+                //           textAlign: TextAlign.center,),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                //     Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: Container(
+                //         height:45,
+                //         width:350,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: Center(child: Text('Previous Balance',style: TextStyle(color: Colors.black,fontSize: 16),)),
+                //       ),
+                //     ),
+                // Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: Container(
+                //         height:45,
+                //         width:350,
+                //         decoration: BoxDecoration(
+                //             border: Border.all(
+                //               color: Colors.black, //color of border
+                //               width: 1, //width of border
+                //             ),
+                //             borderRadius: BorderRadius.zero
+                //         ),
+                //         child: const Center(child: Text('Balance',style: TextStyle(color: Colors.black,fontSize: 16),)),
+                //       ),
+                //     ),
               ],
             ),
             ),
               Divider(color: Colors.indigo.shade900,),
+              Card(
+
+              )
             ],
             ),
           ],

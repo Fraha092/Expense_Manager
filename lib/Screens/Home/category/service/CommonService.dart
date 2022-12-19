@@ -50,7 +50,7 @@ class CommonService {
     Cat(id: 5, name: 'Groceries', icon: 0xf290),
     Cat(id: 6, name: 'Telephone', icon: 0xf6b6),
     Cat(id: 7, name: 'Education', icon: 0xf19d),
-    Cat(id: 8, name: 'Pet', icon: 0xf80f),
+    Cat(id: 8, name: 'Pet', icon: 0xf6d3),
     Cat(id: 8, name: 'Sport', icon: 0xf44e),
     Cat(id: 9, name: 'Others Expense', icon: 0x2b),
      //Cat(index: 0, name: "Food", icon:FontAwesomeIcons.cartShopping),
@@ -67,41 +67,10 @@ class CommonService {
     // Cat(index: 11, name: "Beauty", icon:FontAwesomeIcons.marker ),
      //Cat(id: 12, name: "Education", icon:FontAwesomeIcons.graduationCap ),
     // Cat(index: 13, name: "Gift", icon:FontAwesomeIcons.gift ),
-    // Cat(index: 14, name: "Pet", icon:FontAwesomeIcons.dog ),
+     //Cat(index: 14, name: "Pet", icon:FontAwesomeIcons.dog ),
     // Cat(index: 15, name: "Others Expense", icon:FontAwesomeIcons.plus ),
     // Cat(index: 16, name: "Drinks", icon:FontAwesomeIcons.martiniGlassCitrus ),
 
   ];
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Future<List<Cat>>getCatList() async{
-//   List<Cat>catList=[];
-//   var sharedPreferences = await SharedPreferences.getInstance();
-//   Set<String>keys=sharedPreferences.getKeys();
-//   for(int i=0;i<keys.length;i++){
-//     String value=sharedPreferences.getStringList(keys.elementAt(i));
-//     catList.add(value);
-//   }
-//   return catList;
-// }

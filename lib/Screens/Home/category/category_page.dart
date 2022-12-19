@@ -9,7 +9,7 @@ class CategoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.white70,
         title: const Text("Category"),
-      ),body: CategoryScreen(),
+      ),body:  CategoryScreen(),
     );
 
   }

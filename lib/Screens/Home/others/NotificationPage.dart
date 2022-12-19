@@ -1,9 +1,11 @@
 
+import 'package:expense_app/Screens/Home/others/Profile_Setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../constants.dart';
 import '../category/service/Notification_Service.dart';
 
 class Strings {
@@ -28,7 +30,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
 
 
-  TextStyle secTitleStyle = const TextStyle(fontWeight: FontWeight.bold,color: Colors.teal,fontSize: 16);
+  TextStyle secTitleStyle = const TextStyle(fontWeight: FontWeight.bold,color: kPrimaryColor,fontSize: 16);
   late SharedPreferences prefs;
   bool isNotifiyDaily = false;
   bool isApplockEnable = false;
@@ -60,16 +62,17 @@ class _NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: Colors.teal,
+        toolbarHeight: 30.0,
+        backgroundColor: kPrimaryColor,
         centerTitle: true,
       ),
       body: SettingsList(
           contentPadding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-          //platform: DevicePlatform.web,
+          platform: DevicePlatform.windows,
           lightTheme: const SettingsThemeData(
-            leadingIconsColor: Colors.teal,
-            titleTextColor: Colors.teal,
-            trailingTextColor: Colors.teal,
+            leadingIconsColor: kPrimaryColor,
+            titleTextColor: kPrimaryColor,
+            trailingTextColor: kPrimaryColor,
           ),
           sections: [
             // SettingsSection(
@@ -180,7 +183,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 tiles: [
                   SettingsTile.switchTile(
                     initialValue: isNotifiyDaily,
-                    activeSwitchColor: Colors.teal.shade900,
+                    activeSwitchColor: kPrimaryColor,
                     onToggle: (enable) async {
                       if (enable) {
                         enableNotification();
@@ -193,7 +196,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       await prefs.setBool(Strings.notifyDaily, enable);
                     },
                     title: const Text('Daily Reminder'),
-                    leading: const Icon(Icons.notifications_active_outlined,color: Colors.teal,),
+                    leading: const Icon(Icons.notifications_active_outlined,color: kPrimaryColor,),
                   ),
                   SettingsTile(
                     title: Text(
@@ -202,7 +205,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           color: isNotifiyDaily ? Colors.black : Colors.grey,),
                     ),
                     leading: Icon(Icons.alarm,
-                        color: isNotifiyDaily ? Colors.teal : Colors.grey),
+                        color: isNotifiyDaily ? kPrimaryColor : Colors.grey),
                     enabled: isNotifiyDaily,
                     onPressed: (context) {
                       pickTime(context);
@@ -210,7 +213,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     value: Text(
                         pickedTime != null ? pickedTime!.format(context) : '',
                         style: TextStyle(
-                            color: isNotifiyDaily ? Colors.teal : Colors.grey,
+                            color: isNotifiyDaily ? kPrimaryColor : Colors.grey,
                             fontWeight: FontWeight.bold)),
                   ),
                 ]),
@@ -221,6 +224,16 @@ class _NotificationPageState extends State<NotificationPage> {
                 ),
                 margin: EdgeInsetsDirectional.all(8.0),
                 tiles: [
+                  // SettingsTile(
+                  //     title: const Text('Profile'),
+                  //     leading: const Icon(Icons.restore),
+                  //     onPressed: (context) {
+                  //       Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //         return const ProfileSettingPage();
+                  //       }
+                  //       )
+                  //       );
+                  //     }),
                   SettingsTile(
                       title: const Text('Reset Data'),
                       leading: const Icon(Icons.restore),

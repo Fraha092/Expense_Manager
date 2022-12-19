@@ -257,6 +257,7 @@ extension on List<ExpenseIncome> {
         //person.expense == expenses;
       } catch (e) {
         add(ExpenseIncome(
+
             expense: expenseIncome.expense,
             income: expenseIncome.income,
             category: expenseIncome.category,
@@ -269,6 +270,7 @@ extension on List<ExpenseIncome> {
       print("expenses 4 $incomes ${expenseIncome.category ?? "0"}");
 
       add(ExpenseIncome(
+
           expense: expenseIncome.expense,
           income: expenseIncome.income,
           category: expenseIncome.category,

@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/income/components/category.dart';
 import 'package:expense_app/constants.dart';
 import 'package:expense_app/models/category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -20,8 +22,18 @@ class AddIncomePage extends StatefulWidget {
 }
 class _AddIncomePageState extends State<AddIncomePage> {
 
-  final CollectionReference _addIncome=
-  FirebaseFirestore.instance.collection('add_income');
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  // getCurrentUser(){
+  //   final User? user =_auth.currentUser;
+  //   final uid = user!.uid;
+  //   //final uemail=user.email;
+  //   print("uID $uid");
+  //   return uid;
+  // }
+  // late final CollectionReference _addIncome;
+
+   final CollectionReference _addIncome=
+   FirebaseFirestore.instance.collection('add_income');
 
 
  static final _income=TextEditingController();
@@ -31,7 +43,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
   static final _notes=TextEditingController();
 
   int iconId = 0;
-
+  //late String id='';
   @override
   void initState(){
     _income.clear();
@@ -41,6 +53,8 @@ class _AddIncomePageState extends State<AddIncomePage> {
     _category.text = widget.category.name;
     iconId = widget.category.icon;
     super.initState();
+   // id = getCurrentUser();
+   // _addIncome = FirebaseFirestore.instance.collection(id).doc("add_income").collection(id);
   }
   @override
   Widget build(BuildContext context) {
@@ -58,6 +72,47 @@ class _AddIncomePageState extends State<AddIncomePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      controller: _category,
+                      cursorColor: kPrimaryColor,
+                      onSaved: (category){
+
+                      },
+                      decoration:  InputDecoration(
+                        fillColor: KPrimaryMidLevelColor,
+                        labelText: 'Category',
+                        hintText: "Category",
+                        prefixIcon:  iconId==0? null :Icon(IconDataSolid(iconId)),
+                        suffixIcon: GestureDetector(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return IncomeCategoryScreen();
+                                  },
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.category)),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
+                        ),
+                        labelStyle: TextStyle(
+                            fontSize: 15,fontWeight: FontWeight.normal,
+                            color: kPrimaryColor
+                        ),
+
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
                       controller: _income,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
@@ -65,6 +120,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       onSaved: (income){
                       },
                       decoration: const InputDecoration(
+                        fillColor: KPrimaryMidLevelColor,
                         labelText: 'Income',
                         hintText: "Amount",
                         suffixIcon: Icon(Icons.calculate),
@@ -82,45 +138,6 @@ class _AddIncomePageState extends State<AddIncomePage> {
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _category,
-                      cursorColor: kPrimaryColor,
-                      onSaved: (category){
-
-                      },
-                      decoration:  InputDecoration(
-                        labelText: 'Category',
-                        hintText: "Category",
-                        prefixIcon:  iconId==0? null :Icon(IconDataSolid(iconId)),
-                        suffixIcon: GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return IncomeCategoryScreen();
-                                  },
-                                ),
-                              );
-                            },
-                            child: Icon(Icons.category)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
-                        ),
-                        labelStyle: TextStyle(
-                            fontSize: 15,fontWeight: FontWeight.normal,
-                            color: Colors.teal
-                        ),
-
-                      ),
-                      readOnly: true,
-                    ),
-                  ),
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -134,19 +151,20 @@ class _AddIncomePageState extends State<AddIncomePage> {
 
                       },
                       decoration: const InputDecoration(
+                        fillColor: KPrimaryMidLevelColor,
                         labelText: 'Notes',
                         hintText: "Optional",
                         suffixIcon: Icon(Icons.note_add_sharp),
                         contentPadding: EdgeInsets.all(20),
                         enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         labelStyle: TextStyle(
                             fontSize: 15,fontWeight: FontWeight.normal,
-                            color: Colors.teal
+                            color: kPrimaryColor
                         ),
                       ),
                     ),
@@ -160,18 +178,19 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       onSaved: (date){
                       },
                       decoration: const InputDecoration(
+                        fillColor: KPrimaryMidLevelColor,
                         labelText: 'Date',
                         hintText: " Date",
                         suffixIcon: Icon(Icons.calendar_today),
                         enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         labelStyle: TextStyle(
                             fontSize: 15,fontWeight: FontWeight.normal,
-                            color: Colors.teal
+                            color: kPrimaryColor
                         ),
                       ),
                       readOnly: true,
@@ -209,18 +228,19 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       onSaved: (time){
                       },
                       decoration: const InputDecoration(
+                        fillColor: KPrimaryMidLevelColor,
                         labelText: 'Time',
                         hintText: "Time",
                         suffixIcon: Icon(Icons.timer),
                         enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.teal,width: 2,)
+                            borderSide: BorderSide(color: kPrimaryColor,width: 2,)
                         ),
                         labelStyle: TextStyle(
                             fontSize: 15,fontWeight: FontWeight.normal,
-                            color: Colors.teal
+                            color: kPrimaryColor
                         ),
                       ),
                       readOnly: true,
@@ -245,20 +265,21 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                        crossAxisAlignment: CrossAxisAlignment.center,
                        children: [
-                         Material(color: Colors.teal[600],
+                         Material(
                             shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),),
                            child: Center(
-                             child: TextButton(
-                                style: TextButton.styleFrom(foregroundColor: Colors.white, ),
+                             child: MaterialButton(
+                               color: kPrimaryColor,
+                               //child: TextButton.styleFrom(foregroundColor: Colors.white, ),
                                  onPressed: () async{
+                            if(_income.text !="" && _category != "" && _dates != "" && _times != ""){
                                    Map<String,dynamic>data={
                                      "income": double.parse(_income.text),
                                      "category":_category.text,
                                      "notes":_notes.text,
                                      "dates":_dates.text,
                                      "times":_times.text,
-                                   //  "payment":_payment,
                                    };
                                    if (kDebugMode) {
                                      print("_addIncome   $data");
@@ -268,16 +289,26 @@ class _AddIncomePageState extends State<AddIncomePage> {
                                    ScaffoldMessenger.of(context)
                                        .showSnackBar(const SnackBar(content: Text("New Income Saved!")));
                                    Navigator.of(context).pop();
-
-
                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
                                      return const TransactionPage();
                                    }
                                    )
                                    );
+                                    }
+                                    else{
+                                    Fluttertoast.showToast(
+                                    msg: "Please Fill all the fields for Add new Budget. ",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.TOP,
+                                    timeInSecForIosWeb: 3,
+                                    backgroundColor: Colors.indigo.shade100,
+                                    textColor: Colors.indigo.shade900,
+                                    fontSize: 16.0
+                                    );
 
+                                    }
                                  },
-                                child: const Text("Save"),
+                                child: const Text("Save",style: TextStyle(color: Colors.white),),
 
                                  ),
                                ),

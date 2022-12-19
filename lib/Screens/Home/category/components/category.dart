@@ -1,6 +1,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/expense/add_expense_page.dart';
+import 'package:expense_app/Screens/Home/others/add_budget.dart';
+import 'package:expense_app/Screens/Home/others/ruffPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,7 +11,8 @@ import '../../../../constants.dart';
 import '../../../../models/category.dart';
 import '../service/CommonService.dart';
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({Key? key}) : super(key: key);
+  String? requestType = "";
+  CategoryScreen({Key? key,  this.requestType}) : super(key: key);
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
@@ -37,7 +40,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: kPrimaryColor,
         centerTitle: true,
         title: const Text(
           "Category",
@@ -51,6 +54,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             controller: _searchController,
             focusNode: _textFocusNode,
             decoration: const InputDecoration(
+              fillColor: KPrimaryMidLevelColor,
               hintText: 'Search',
               suffixIcon: Icon(Icons.search),
               enabledBorder: UnderlineInputBorder(
@@ -65,7 +69,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               )),
               border: UnderlineInputBorder(
                   borderSide: BorderSide(
-                color: Colors.teal,
+                color: kPrimaryColor,
                 width: 2,
               )),
             ),
@@ -94,7 +98,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   : FutureBuilder<List<Cat>>(
                 future: _commonService.retrieveCategories(),
                     builder: (context,future) {
-
                   print("future   ${future.data?.length}");
 
                   if(!future.hasData) {
@@ -112,35 +115,41 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           return Card(
                             child: ListTile(
                               onTap: () async {
-                                Future.delayed(Duration.zero, () {
-                                  setState(() {
-                                    print(
-                                        "catListSearch   ${catListSearch?[index]
-                                            .name}  ${catList[index]
-                                            .name}");
-                                    Navigator.pop(context);
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return AddExpensePage(
-                                              category: _searchController
-                                                  .text.isNotEmpty
-                                                  ? catListSearch![index]
-                                                  : catList[index]
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  });
-                                });
-                              },
+                                if(widget.requestType == "addBudget"){
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                    builder: (context) {
+                                      return AddBudget(
+                                          category: _searchController
+                                              .text.isNotEmpty
+                                              ? catListSearch![index]
+                                              : catList[index]
+                                      );
+                                    },
+                                  ),
+
+                                  );
+                                }else{
+                                  Navigator.pop(context);
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                    builder: (context) {
+                                      return AddExpensePage(
+                                          category: _searchController
+                                              .text.isNotEmpty
+                                              ? catListSearch![index]
+                                              : catList[index]
+                                      );
+                                    },
+                                  ),
+
+                                  );
+                                }
+                                },
                               leading: CircleAvatar(
-                                  backgroundColor: KPrimaryMidLevelColor,
+                                  backgroundColor: Colors.grey.shade50,
                                   child: Icon(IconDataSolid(
                                       _searchController.text.isNotEmpty
                                           ? catListSearch![index].icon
-                                          : catList[index].icon), size: 16,)
+                                          : catList[index].icon), size: 16,color: Colors.black,)
 
                               ),
                               title: Text(_searchController.text.isNotEmpty

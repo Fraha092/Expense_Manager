@@ -24,8 +24,8 @@ class _MonthlyIncomePieChartState extends State<MonthlyIncomePieChart> {
   List<ExpenseIncome> expenseIncomeList2 = [];
 
   DateTimeRange dateRange=DateTimeRange(
-      start: DateTime(2022,11,01),
-      end: DateTime(2022,11,30)
+      start: DateTime(2022,12,01),
+      end: DateTime(2022,12,31)
   );
 
   int key=0;
@@ -327,7 +327,7 @@ extension on List<ExpenseIncome> {
     } else {
       print("expenses 4 $incomes ${expenseIncome.category}");
 
-      add(ExpenseIncome(expense: expenseIncome.expense, income: expenseIncome.income, category: expenseIncome.category, payment: expenseIncome.payment, dates: expenseIncome.dates, times: expenseIncome.times, notes: expenseIncome.notes));
+      add(ExpenseIncome( expense: expenseIncome.expense, income: expenseIncome.income, category: expenseIncome.category, payment: expenseIncome.payment, dates: expenseIncome.dates, times: expenseIncome.times, notes: expenseIncome.notes));
     }
   }
 }

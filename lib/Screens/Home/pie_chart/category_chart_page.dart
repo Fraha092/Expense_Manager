@@ -4,6 +4,8 @@ import 'package:expense_app/Screens/Home/pie_chart/pie_chart_income0.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants.dart';
+
 class CategoryChartPage extends StatelessWidget {
   const CategoryChartPage({Key? key}) : super(key: key);
 
@@ -13,14 +15,14 @@ class CategoryChartPage extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.teal,
+            backgroundColor: kPrimaryColor,
             title: const Text('Charts',style: TextStyle(fontSize: 20)),
             bottom: TabBar(
              // physics: ScrollPhysics(),
                 isScrollable: false,
-                indicatorColor: Colors.teal,
+                indicatorColor: kPrimaryColor,
                 indicatorWeight: 3,
-                labelColor: Colors.teal,
+                labelColor: kPrimaryColor,
                 tabs: <Widget>[
                   Tab(
                     child: Container(
