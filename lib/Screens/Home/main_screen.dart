@@ -39,7 +39,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
       container = const TransactionPage();
     }
     else if (widget.currentPage == DrawerSections.budget) {
-      container = BudgetPage();
+      container = NewBudget();
     }
     else if (widget.currentPage == DrawerSections.categoryChart) {
       container = const CategoryChartPage();
@@ -55,9 +55,9 @@ class _MainScreenPageState extends State<MainScreenPage> {
     } else if (widget.currentPage == DrawerSections.setting) {
       container = const NotificationPage();
     }
-    else if (widget.currentPage == DrawerSections.setting) {
-      container = NewBudget();
-    }
+    // else if (widget.currentPage == DrawerSections.setting) {
+    //   container = NewBudget();
+    // }
     else if (widget.currentPage == DrawerSections.logOut) {
       container = const LogoutPage();
     }
@@ -127,11 +127,11 @@ class _MainScreenPageState extends State<MainScreenPage> {
           //     widget.currentPage == DrawerSections.FQA ? true : false),
           menuItem(8, " Setting", Icons.settings,
               widget.currentPage == DrawerSections.setting ? true : false),
-          menuItem(9, " Ruff", Icons.gavel_rounded,
-              widget.currentPage == DrawerSections.ruff ? true : false),
+          // menuItem(9, " Ruff", Icons.gavel_rounded,
+          //     widget.currentPage == DrawerSections.ruff ? true : false),
           const Divider(),
 
-          menuItem(10, "Logout", Icons.exit_to_app,
+          menuItem(9, "Logout", Icons.exit_to_app,
               widget.currentPage == DrawerSections.logOut ? true : false),
         ],
       ),
@@ -178,7 +178,8 @@ class _MainScreenPageState extends State<MainScreenPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return BudgetPage();
+                   // return BudgetPage();
+                    return NewBudget();
                     //return const GridSearchScreen();
                   })
               );
@@ -216,17 +217,17 @@ class _MainScreenPageState extends State<MainScreenPage> {
                   })
               );
             }
+            // else if (id == 9) {
+            //   //widget.currentPage = DrawerSections.notification;
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) {
+            //         return NewBudget();
+            //         //return const GridSearchScreen();
+            //       })
+            //   );
+            // }
             else if (id == 9) {
-              //widget.currentPage = DrawerSections.notification;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return NewBudget();
-                    //return const GridSearchScreen();
-                  })
-              );
-            }
-            else if (id == 10) {
               _signOut();
               Navigator.push(
                   context,
@@ -263,7 +264,7 @@ enum DrawerSections {
   profile,
   FQA,
   setting,
-  ruff,
+  //ruff,
   logOut,
 }
 

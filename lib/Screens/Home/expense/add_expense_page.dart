@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../models/BudgetModel.dart';
 import '../../../models/category.dart';
@@ -328,11 +329,10 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                 child: MaterialButton(
                                   color: kPrimaryColor,
                                   onPressed:() async{
-
                                     if(_expense.text !="" && _category != "" && _payment != "" && _dates != "" && _times != ""){
-
                                       for(var item in budgetList){
                                         if(item.category == _category.text){
+                                         print("amount   ${item.category}   ${item.amount}  ${double.parse(_expense.text)} ");
                                           if(item.amount >= double.parse(_expense.text)){
                                             Map<String,dynamic>data={
                                               "expense": double.parse(_expense.text),
@@ -354,7 +354,9 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                             }
                                             )
                                             );
-                                          }else{
+                                          }
+                                          else
+                                          {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(const SnackBar(content: Text("Your amount exist")));
                                           }
@@ -362,6 +364,28 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                         }
                                       }
 
+                                      if (budgetList.where((element) => element.category == _category.text ).isEmpty){
+                                        Map<String,dynamic>data={
+                                          "expense": double.parse(_expense.text),
+                                          "category":_category.text,
+                                          "notes":_notes.text,
+                                          "dates":_dates.text,
+                                          "times":_times.text,
+                                          "payment":_payment,
+                                        };
+                                        if (kDebugMode) {
+                                          print("_addExpense   $data");
+                                        }
+                                        _addExpense.add(data);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(content: Text("New Saved!")));
+                                        Navigator.of(context).pop();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return const TransactionPage();
+                                        }
+                                        )
+                                        );
+                                      }
                                     }
                                     else{
                                       Fluttertoast.showToast(

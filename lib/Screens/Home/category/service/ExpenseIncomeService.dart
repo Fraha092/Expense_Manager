@@ -66,8 +66,8 @@ class ExpenseIncomeService {
           "allExpenseData  ${expenseIncomeList.first.income} ${expenseIncomeList.length}   $totalIncome");
     }
      balance=totalIncome-totalExpense;
-    print("allData  ${expenseIncomeList.first.expense} ${expenseIncomeList.length} "
-       " ${expenseIncomeList.first.income} ${expenseIncomeList.length}   $totalIncome  $totalExpense ");
+    // print("allData  ${expenseIncomeList.first.expense} ${expenseIncomeList.length} "
+    //    " ${expenseIncomeList.first.income} ${expenseIncomeList.length}   $totalIncome  $totalExpense ");
 
      return expenseIncomeList;
   }

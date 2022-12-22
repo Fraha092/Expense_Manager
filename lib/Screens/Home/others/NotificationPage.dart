@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/others/Profile_Setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -239,6 +240,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       leading: const Icon(Icons.restore),
                       onPressed: (context) {
                         confirmReset(context);
+
                       }),
                   SettingsTile(
                       title: const Text('FQA'),
@@ -256,7 +258,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             borderRadius: BorderRadius.circular(7),
                             child: Image.asset('',
                                 width: 50)),
-                        applicationName: 'Expense Manager',
+                        applicationName: 'Expense Management',
                         applicationVersion: 'version 1.0.1',
                         children: <Widget>[
                           const Text('Developed by Farha Faeja Emu')
@@ -288,6 +290,22 @@ class _NotificationPageState extends State<NotificationPage> {
                 child: const Text('No')),
             TextButton(
                 onPressed: () {
+                  FirebaseFirestore.instance.collection('budget').get().then((snapshot) {
+                    for (DocumentSnapshot doc in snapshot.docs) {
+                      doc.reference.delete();
+                    }
+                  });
+                  FirebaseFirestore.instance.collection('add_expense').get().then((snapshot) {
+                    for (DocumentSnapshot doc in snapshot.docs) {
+                      doc.reference.delete();
+                    }
+                  });
+                  FirebaseFirestore.instance.collection('add_income').get().then((snapshot) {
+                    for (DocumentSnapshot doc in snapshot.docs) {
+                      doc.reference.delete();
+                    }
+                  });
+
                   // resetData(ctx);
                 },
                 child: const Text('Yes'))

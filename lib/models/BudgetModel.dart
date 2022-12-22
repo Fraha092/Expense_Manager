@@ -30,7 +30,7 @@ class BudgetModel {
   }
 
   static fromJson(i) {
-    BudgetModel budgetModel = BudgetModel( category: i["category"] ?? "" , amount:  i["budget"] ?? 0);//,icon: i["icon"] ?? 0);
+    BudgetModel budgetModel = BudgetModel( category: i["category"] ?? "" , amount:  i["amount"] ?? 0);//,icon: i["icon"] ?? 0);
     return budgetModel;
 
   }
