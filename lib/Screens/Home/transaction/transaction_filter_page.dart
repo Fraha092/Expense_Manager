@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import 'components/monthly_transaction.dart';
 import 'components/yearly_transaction.dart';
-
 class TransactionPage extends StatefulWidget {
   const TransactionPage({Key? key}) : super(key: key);
-
   @override
   State<TransactionPage> createState() => _TransactionPageState();
 }
-
 class _TransactionPageState extends State<TransactionPage> {
   @override
   Widget build(BuildContext context) {
@@ -20,8 +17,8 @@ class _TransactionPageState extends State<TransactionPage> {
           appBar: AppBar(
             backgroundColor: kPrimaryColor,
             title: Row(
-              children: [
-                const Text('Transactions',style: TextStyle(fontSize: 20.0),),
+              children: const [
+                Text('Transactions',style: TextStyle(fontSize: 20.0),),
                 Spacer(),
               ],
             ),
@@ -33,7 +30,6 @@ class _TransactionPageState extends State<TransactionPage> {
               tabs: <Widget>[
                 Tab(
                   child: Container(
-
                     child: const Text(
                       'All',
                       style: TextStyle(fontSize: 11.0,color: Colors.white),
@@ -50,7 +46,6 @@ class _TransactionPageState extends State<TransactionPage> {
                 ),
                 Tab(
                   child: Container(
-
                     child: const Text(
                       'Yearly',
                       style: TextStyle(fontSize: 11.0,color: Colors.white),
@@ -60,7 +55,7 @@ class _TransactionPageState extends State<TransactionPage> {
               ],
             ),
           ),
-          body: const TabBarView(
+          body:  const TabBarView(
             children: <Widget>[
               AllTransaction(),
               MonthlyTransaction(),
@@ -68,7 +63,6 @@ class _TransactionPageState extends State<TransactionPage> {
             ],
           ),
         ),
-
     );
   }
 }

@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/expense/add_expense_page.dart';
 import 'package:expense_app/Screens/Home/income/add_income_page.dart';
 import 'package:expense_app/Screens/Home/transaction/transaction_filter_page.dart';
@@ -6,10 +7,9 @@ import 'package:expense_app/constants.dart';
 import 'package:expense_app/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-
 import '../../models/expense_income.dart';
 import 'category/service/ExpenseIncomeService.dart';
+import 'others/empty_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,44 +17,17 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
-
-
-  DateTimeRange dateRange=DateTimeRange(
-      start: DateTime(2022,12,21),
-      end: DateTime(2022,12,21)
-      // start: DateTime(2022,12,20),
-      // end: DateTime(2022,12,21)
-  );
   double totalIncome = 0;
   double totalExpense=0;
   double balance=0;
-
   ExpenseIncomeService expenseIncomeService = ExpenseIncomeService();
   List<ExpenseIncome> expenseIncomeList = [];
+  bool isLoading = true;
+  // late final CollectionReference
+  // _addExpense= FirebaseFirestore.instance.collection('add_expense').orderBy('dates',descending: true);
 
-  loadData(){
-    expenseIncomeList.clear();
-    expenseIncomeService.getData().then((value) {
-      if(mounted){
-        setState(() {
-          var dateFormat=DateFormat('yyyy-MM-dd');
-          if(value!=null){
-            for(var item in value){
-              final mydate=dateFormat.parse(item.dates);
-              if(mydate.isBefore(dateRange.end) && mydate.isAfter(dateRange.start)){
-                expenseIncomeList.add(item);
-                print("myDate is between date1 and date2   ${dateRange.end}");
-              }
-              else{
-                const Text('Transaction not Found');
-              }
-            }
-          }
-        });}
-    }) ;
-  }
+
 
   @override
   void initState() {
@@ -64,7 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
         if(value != null) {
           expenseIncomeList = value;
           for (var element in value) {
+
             if(element.expense!=null){
+
               totalExpense += element.expense;
             }
             if(element.income != null){
@@ -73,39 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
             balance=totalIncome-totalExpense;
           }
         }
-
+        isLoading =false;
       });
     }) ;
-    loadData();
-    super.initState();
 
+    super.initState();
   }
-  // loadData(){
-  //   expenseIncomeList.clear();
-  //   expenseIncomeService.getData().then((value) {
-  //     if(mounted){
-  //       setState(() {
-  //         var dateFormat=DateFormat('yyyy-MM-dd');
-  //         if(value!=null){
-  //           for(var item in value){
-  //             final mydate=dateFormat.parse(item.dates ?? '0');
-  //             if(mydate.isBefore(endDate) && mydate.isAfter(startDate)){
-  //               expenseIncomeList.add(item);
-  //              // print("myDate is between date1 and date2   ${dateRange.end}");
-  //               print("myDate is between date1 and date2   ${endDate}");
-  //             }
-  //             else{
-  //               const Text('Transaction not Found');
-  //             }
-  //           }
-  //         }
-  //       });}
-  //   }) ;
-  // }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: EdgeInsets.all(10.0),
       child: SingleChildScrollView(
@@ -152,8 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(width: 10,height: 0,),
               Expanded(flex: 1,
                   child: Container(
-                    //  height: MediaQuery.of(context).size.height*0.70,
-                    // width: MediaQuery.of(context).size.width*0.25,
                     decoration: BoxDecoration(color: Colors.teal.shade50,
                       border: Border.all(
                         color: Colors.black, //color of border
@@ -188,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
             ),
-            SizedBox(width: 20,height: 0,),
+            const SizedBox(width: 20,height: 0,),
             Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -202,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return TransactionPage();
+                        return const TransactionPage();
                       })
                   );
                 },
@@ -230,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         height:50,
@@ -274,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.zero
                         ),
                         child: Text("Balance  \n$balance",
-                          style: TextStyle(fontSize: 16,color: Colors.black,),
+                          style: const TextStyle(fontSize: 16,color: Colors.black,),
                           textAlign: TextAlign.center,),
                       ),
                     ],
@@ -283,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
               Divider(color: Colors.indigo.shade900,),
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               Column(
                 children: [
                   Row(
@@ -309,43 +259,161 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Divider(color: Colors.indigo.shade900,),
-                  Container(
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            physics: const ScrollPhysics(),
-                            itemCount: expenseIncomeList.length,
-                            itemBuilder: (BuildContext ctx, index){
-                              return Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    const SizedBox(height: 10,),
-                                    ListTile(
-                                      tileColor: Colors.grey.shade50,
-                                      leading: Text(expenseIncomeList[index].dates
-                                          // "\n${expenseIncomeList[index].times}"
-                                      ),
-                                      title: Text(expenseIncomeList[index].category),
-                                      trailing: Column(
-                                        children: [
-                                          Text("${expenseIncomeList[index].expense}"
-                                          ),
-                                          Text("${expenseIncomeList[index].income}")
-                                        ],
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              );
-                            }
-                        ),
-                      ],
-
-                    ),
-                  ),
+                  SizedBox(
+                    child: StreamBuilder(
+                    stream: FirebaseFirestore.instance.collection('add_expense').orderBy('times',descending: true).snapshots(),
+                     builder:
+                         (context, AsyncSnapshot<QuerySnapshot> streamSnapshots) {
+                           if (!streamSnapshots.hasData) {
+                             return const Center(child: Text('Loading...'));
+                           }
+                           return Column(
+                             children: [
+                               ListView.builder(
+                                   scrollDirection: Axis.vertical,
+                                   shrinkWrap: true,
+                                   physics: ScrollPhysics(),
+                                   itemCount: streamSnapshots.data!.docs.length,
+                                   itemBuilder: (BuildContext context, index) {
+                                     final DocumentSnapshot documentSnapshot1 =
+                                     streamSnapshots.data!.docs[index];
+                                     return Column(children: <Widget>[
+                                       SizedBox(
+                                         height: 10,
+                                       ),
+                                       Card(
+                                         borderOnForeground: true,
+                                         shadowColor: Colors.cyan,
+                                         child: ListTile(
+                                           tileColor: Colors.grey.shade50,
+                                           subtitle: Row(
+                                             children: <Widget>[
+                                               Container(
+                                                 alignment: Alignment.centerLeft,
+                                                 width: 75,
+                                                 child: Text(
+                                                     "${documentSnapshot1.get('dates')}"
+                                                         "\n${documentSnapshot1.get('times')}"
+                                                        // "\n${documentSnapshot1.get('payment')}"
+                                                         //"\n${documentSnapshot1.get('notes')}"
+                                                   ),
+                                               ),
+                                               Container(
+                                                 width: 75,
+                                                 child: Center(
+                                                   child: Text(
+                                                     "${documentSnapshot1.get('category')}",
+                                                     style: TextStyle(
+                                                         color: Colors.black),
+                                                     textAlign: TextAlign.center,
+                                                   ),
+                                                 ),
+                                               ),
+                                               Container(
+                                                 width: 75,
+                                                 child: Center(
+                                                   child: Text("0.0",style: TextStyle(color: Colors.green)),
+                                                 ),
+                                               ),
+                                             ],
+                                           ),
+                                           trailing: Container(
+                                             width: 75,
+                                             child: Center(
+                                               child: Text(
+                                                 "${documentSnapshot1.get('expense')} TK",
+                                                 style: TextStyle(
+                                                     color: Colors.red.shade900),
+                                               ),
+                                             ),
+                                           ),
+                                         ),
+                                       )
+                                     ]);
+                                   }),
+                             ],
+                           );
+                                 },
+                  )
+                  // SizedBox(
+                  //   child: expenseIncomeList.isEmpty
+                  //       ? SizedBox(
+                  //     height: MediaQuery.of(context).size.height * 0.4,
+                  //     child: const EmptyView(
+                  //         icon: Icons.receipt_long,
+                  //         label: 'No Transactions Found'),
+                  //   )
+                  //       : ListView.builder(
+                  //         shrinkWrap: true,
+                  //         physics: const NeverScrollableScrollPhysics(),
+                  //         itemCount:
+                  //         expenseIncomeList.length > 5
+                  //             ? expenseIncomeList.length
+                  //             : 5,
+                  //         itemBuilder: (context, index) {
+                  //           return Column(
+                  //             children: [
+                  //               ListTile(
+                  //                 tileColor: Colors.grey.shade50,
+                  //                 subtitle: Row(
+                  //                   children: <Widget>[
+                  //                     Container(
+                  //                       width: 75,
+                  //                       child:  Center(
+                  //                         child: Text(
+                  //                             "${expenseIncomeList[index].dates}"
+                  //                                 "\n${expenseIncomeList[index].times}"
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Container(
+                  //                       width: 70,
+                  //                       child: Center(
+                  //                         child: Text(
+                  //                           "${expenseIncomeList[index].category}",
+                  //                           style: TextStyle(color: Colors.black,fontWeight: FontWeight.w400),
+                  //                           textAlign: TextAlign.center,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     Container(
+                  //                       width: 75,
+                  //                       child: Center(
+                  //                         child: Text(
+                  //                           "${expenseIncomeList[index].income}",
+                  //                           style: TextStyle(color: Colors.green.shade900,fontWeight: FontWeight.w400),
+                  //                           textAlign: TextAlign.center,
+                  //                         ),
+                  //           a            ),
+                  //                     )
+                  //                   ],
+                  //                 ),
+                  //                 trailing: Container(
+                  //                   width: 75,
+                  //                   child: Center(
+                  //                     child: Text(
+                  //                       "${expenseIncomeList[index].expense}",
+                  //                       style: TextStyle(color: Colors.red.shade900,fontWeight: FontWeight.w400),
+                  //                       textAlign: TextAlign.center,
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //                 // leading: Container(
+                  //                 //   width: 75,
+                  //                 //   child: Text(expenseIncomeList[index].category),
+                  //                 // ),
+                  //                 // title: Text(expenseIncomeList[index].dates),
+                  //                 // subtitle: Text(expenseIncomeList[index].times),
+                  //                 // trailing: Text("${expenseIncomeList[index].expense}"),
+                  //               ),
+                  //               SizedBox(
+                  //                 height: 15,
+                  //               )
+                  //             ],
+                  //
+                  //           );
+                  //         }),
+                   ),
                 ],
               )
             ],
@@ -355,33 +423,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  Future pickDateRange() async{
-    DateTimeRange? newDateRange=await
-    showDateRangePicker(
-      context: context,
-      initialDateRange: dateRange,
-      firstDate: DateTime.utc(2022),
-      lastDate: DateTime.utc(2022),
-    );
-    if(newDateRange!=null) {
-      setState(() {
-        dateRange = newDateRange;
-        loadData();
-      });
-    }
-  }
-
-
-
-// Future recentTransaction( DateTime start, DateTime end) async{
-  //   DateTime start= DateTime(now.year, now.month, now.day);
-  //   DateTime end= start.add(const Duration(days: 1));
-  //     startDate= start;
-  //     endDate=end;
-  //  setState(() {
-  //     loadData();
-  //      });
-  // }
 }
 

@@ -21,24 +21,27 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
     print("uID $uid");
     return uemail;
   }
-
+  //final CollectionReference users= FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+       // leading: BackButton(),
         backgroundColor: kPrimaryColor,
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
-      body: ListView(
+      body:
+      ListView(
         children: <Widget>[
+          Container(),
           Container(
             height: 80,width: 100,
             child: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context,snapshot){
                 if(snapshot.connectionState!= ConnectionState.active){
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -51,31 +54,31 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
                     future: users.doc(uid).get(),
                       builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot){
                       if(snapshot.hasError){
-                        return Text("Something went wrong");
+                        return const Text("Something went wrong");
                       }
                       if(snapshot.hasData && !snapshot.data!.exists){
-                        return Text("Document does not exist");
+                        return const Text("Document does not exist");
                       }
                       if(snapshot.connectionState==ConnectionState.done){
                         Map<String,dynamic>data=snapshot.data!.data() as Map<String,dynamic>;
                         return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 30,horizontal: 25),
-                          child: Text("Name:  ${data['name']}",style: TextStyle(fontSize: 17),),
+                            padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 25),
+                          child: Text("Name:  ${data['name']}",style: const TextStyle(fontSize: 17),),
                         );
                       }
-                      return Text("Loading");
+                      return const Text("Loading");
                       },
                   );
                 }
                 else{
-                  return Text("user is not logged in");
+                  return const Text("user is not logged in");
                 }
               },
 
             ),
 
           ),
-          Divider(
+          const Divider(
             height: 2,
           ),
           //mail
@@ -86,9 +89,10 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
                 child: Text(
+                  // ignore: prefer_interpolation_to_compose_strings
                   'Mail: ' + getCurrentUser(),
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 17),
+                  style: const TextStyle(fontSize: 17),
                 ),
               )
 
@@ -104,7 +108,7 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.active) {
-                  return Center(
+                  return const Center(
                       child: CircularProgressIndicator()); // 👈 user is loading
                 }
                 final user = snapshot.data;
@@ -113,17 +117,16 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
                   print(user);
                   CollectionReference users =
                   FirebaseFirestore.instance.collection('users');
-
                   return FutureBuilder<DocumentSnapshot>(
                     future: users.doc(uid).get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        return Text("Something went wrong");
+                        return const Text("Something went wrong");
                       }
 
                       if (snapshot.hasData && !snapshot.data!.exists) {
-                        return Text("Document does not exist");
+                        return const Text("Document does not exist");
                       }
 
                       if (snapshot.connectionState == ConnectionState.done) {
@@ -135,11 +138,11 @@ var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get(
                         );
                       }
 
-                      return Text("loading");
+                      return const Text("loading");
                     },
                   );
                 } else {
-                  return Text("user is not logged in");
+                  return const Text("user is not logged in");
                 }
               },
             ),

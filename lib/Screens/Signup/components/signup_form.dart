@@ -76,9 +76,16 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: _number,
               validator: (value){
-                if(value!.isEmpty) {
-                  return ("Required Valid Number");
+                if (value == null || value.trim().isEmpty) {
+                  return 'This field is required';
                 }
+                if (value.trim().length == 11) {
+                  return 'Phone number must be at least 11 characters in length';
+                }
+                return null;
+                // if(value!.isEmpty) {
+                //   return ("Required Valid Number");
+                // }
               },
 
               keyboardType: TextInputType.number,

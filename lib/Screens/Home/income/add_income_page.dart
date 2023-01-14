@@ -30,7 +30,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
   //   print("uID $uid");
   //   return uid;
   // }
-  // late final CollectionReference _addIncome;
+ // late final CollectionReference _addIncome;
 
    final CollectionReference _addIncome=
    FirebaseFirestore.instance.collection('add_income');
@@ -43,7 +43,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
   static final _notes=TextEditingController();
 
   int iconId = 0;
-  //late String id='';
+  late String id;
   @override
   void initState(){
     _income.clear();
@@ -54,7 +54,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
     iconId = widget.category.icon;
     super.initState();
    // id = getCurrentUser();
-   // _addIncome = FirebaseFirestore.instance.collection(id).doc("add_income").collection(id);
+   // _addIncome = FirebaseFirestore.instance.collection('add_income').doc(id).collection('add_income');
   }
   @override
   Widget build(BuildContext context) {

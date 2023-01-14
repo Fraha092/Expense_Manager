@@ -63,7 +63,7 @@ class _NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        toolbarHeight: 30.0,
+        toolbarHeight: 60.0,
         backgroundColor: kPrimaryColor,
         centerTitle: true,
       ),
@@ -225,6 +225,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 ),
                 margin: EdgeInsetsDirectional.all(8.0),
                 tiles: [
+
                   // SettingsTile(
                   //     title: const Text('Profile'),
                   //     leading: const Icon(Icons.restore),
@@ -235,6 +236,21 @@ class _NotificationPageState extends State<NotificationPage> {
                   //       )
                   //       );
                   //     }),
+                  SettingsTile(
+                      title: const Text('Profile'),
+                      leading: const Icon(Icons.person),
+                      onPressed: (context) {
+                        //confirmReset(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const ProfileSettingPage();
+                            },
+                          ),
+                        );
+
+                      }),
                   SettingsTile(
                       title: const Text('Reset Data'),
                       leading: const Icon(Icons.restore),
@@ -256,7 +272,8 @@ class _NotificationPageState extends State<NotificationPage> {
                         context: context,
                         applicationIcon: ClipRRect(
                             borderRadius: BorderRadius.circular(7),
-                            child: Image.asset('',
+                            child: Image.asset('assets/images/expense.png',
+                               // height: 20,
                                 width: 50)),
                         applicationName: 'Expense Management',
                         applicationVersion: 'version 1.0.1',
@@ -266,8 +283,6 @@ class _NotificationPageState extends State<NotificationPage> {
                       );
                     },
                   )
-
-
                 ]
             )
           ]),
@@ -330,22 +345,22 @@ class _NotificationPageState extends State<NotificationPage> {
   enableNotification() {
     notificationService.showNotificationDaily(
         id: 1,
-        title: 'Expense Manager',
-        body: 'Have you recorded your transactions today?',
+        title: 'Expense Management',
+        body: 'Hello There,Have you recorded your transactions today?',
         scheduleTime: pickedTime!);
   }
 
 
 }
-class SettingsVisibility extends AbstractSettingsTile {
-  final bool visibe;
-  final Widget child;
-  const SettingsVisibility(
-      {Key? key, required this.visibe, required this.child})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(visible: visibe, child: child);
-  }
-}
+// class SettingsVisibility extends AbstractSettingsTile {
+//   final bool visibe;
+//   final Widget child;
+//   const SettingsVisibility(
+//       {Key? key, required this.visibe, required this.child})
+//       : super(key: key);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Visibility(visible: visibe, child: child);
+//   }
+// }
 

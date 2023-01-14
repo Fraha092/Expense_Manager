@@ -78,6 +78,7 @@ class _LoginFormState extends State<LoginForm> {
                 }
                 return 'Enter a Valid Email Address';
               }
+              return null;
             },
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -118,10 +119,10 @@ class _LoginFormState extends State<LoginForm> {
                //  final prefs= await SharedPreferences.getInstance();
                // prefs.setBool('isLoggedIn',true);
                 dynamic result = await _auth.signInEmailPassword(LoginUser(email: _email.text,password: _password.text));
-                if (result.uid == null) { //null means unsuccessfull authentication
+                if (result.uid == null) {
                   showDialog(
                       context: context,
-                      builder: (context) {
+                      builder: ( BuildContext context) {
                         return AlertDialog(
                           content: Text(result.code),
                         );
@@ -129,14 +130,17 @@ class _LoginFormState extends State<LoginForm> {
                 }else{
                   _commonService.saveCategories();
                   _commonServiceIncome.saveCategoriesIn();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return MainScreenPage(currentPage: DrawerSections.home);
-                      },
-                    ),
-                  );
+                // setState(() {
+                   // ignore: use_build_context_synchronously
+                   Navigator.pushReplacement(
+                     context,
+                     MaterialPageRoute(
+                       builder: (BuildContext context) {
+                         return  MainScreenPage(currentPage: DrawerSections.home);
+                       },
+                     ),
+                   );
+                // });
                 }
               },
               child: Text(

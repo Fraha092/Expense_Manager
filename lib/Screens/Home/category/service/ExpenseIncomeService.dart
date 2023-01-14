@@ -4,32 +4,34 @@ import 'package:expense_app/models/expense_income.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ExpenseIncomeService {
-   final CollectionReference _addExpense =
-  FirebaseFirestore.instance.collection('add_expense');
-   final CollectionReference _addIncome =
-  FirebaseFirestore.instance.collection('add_income');
+
+ // late final CollectionReference _addExpense ;
+  //= FirebaseFirestore.instance.collection('add_expense').doc(id).collection('add_expense');
+  // id = getCurrentUser();
+  // _addIncome = FirebaseFirestore.instance.collection('add_expense').doc(id).collection('add_expense');
+  // _addExpense = FirebaseFirestore.instance.collection('add_income').doc(id).collection('add_income');
+ //late final CollectionReference _addIncome;
+ //=FirebaseFirestore.instance.collection('add_income').doc(id).collection('add_income');
+
+  final CollectionReference _addExpense = FirebaseFirestore.instance.collection('add_expense');
+    final CollectionReference _addIncome =FirebaseFirestore.instance.collection('add_income');
 
    final FirebaseAuth _auth = FirebaseAuth.instance;
-  //
-  // getCurrentUser(){
-  //   final User? user =_auth.currentUser;
-  //   final uid = user!.uid;
-  //   //final uemail=user.email;
-  //   print("uID $uid");
-  //   return uid;
-  // }
-  //
-  //
-  // late String id='';
-  //
-  // void initState(){
-  //   //super.initState();
-  //   id = getCurrentUser();
-  //   _addIncome = FirebaseFirestore.instance.collection(id).doc("add_income").collection(id);
-  //   _addExpense = FirebaseFirestore.instance.collection(id).doc("add_expense").collection(id);
-  //
-  // }
-
+  getCurrentUser(){
+    //@override
+    // void initState(){
+    //   id = getCurrentUser();
+    //   _addIncome = FirebaseFirestore.instance.collection('add_expense').doc(id).collection('add_expense');
+    //   _addExpense = FirebaseFirestore.instance.collection('add_income').doc(id).collection('add_income');
+    //   super.initState();
+    //
+    // }
+    final User? user =_auth.currentUser;
+    final uid = user!.uid;
+    print("uID $uid");
+    return uid;
+  }
+  late String id;
   double totalIncome = 0;
   double totalExpense = 0;
   double balance = 0;
@@ -85,16 +87,11 @@ class ExpenseIncomeService {
     for (var element in expenseIncomeList) {
       totalIncome += element.income;
       print("allExpenseData  ${expenseIncomeList.first.income} ${expenseIncomeList.length}   $totalIncome");
-
     }
-
     balance = totalIncome -  totalExpense;
     print(("Total Balance   $balance"));
-
     return addIncomeDataItemsList;
   }
-
-
   Future<List<ExpenseIncome>?> getExpenseData() async {
     List<ExpenseIncome> expenseIncomeList = [];
     totalExpense=0;
@@ -104,16 +101,12 @@ class ExpenseIncomeService {
     List<ExpenseIncome> itemsList = List<ExpenseIncome>.from(
         addExpenseData.map<ExpenseIncome>((dynamic i) => ExpenseIncome.fromJson(i)));
     expenseIncomeList.addAll(itemsList);
-
     for (var element in expenseIncomeList) {
       totalExpense += element.expense;
       print("allData  ${expenseIncomeList.first.expense} ${expenseIncomeList.length}   $totalExpense");
     }
-
-
     balance = totalIncome - totalExpense;
     print(("Total Balance   $balance"));
-
     return itemsList;
   }
 

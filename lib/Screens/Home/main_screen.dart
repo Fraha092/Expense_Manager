@@ -1,11 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_app/Screens/Home/transaction/transaction_filter_page.dart';
 import 'package:expense_app/Screens/Welcome/welcome_screen.dart';
 import 'package:expense_app/models/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
-import 'Budget/Budget_page.dart';
-import 'others/Profile_Setting.dart';
 import 'others/ruffPage.dart';
 import 'pie_chart/category_chart_page.dart';
 import 'expense/add_expense_page.dart';
@@ -13,7 +12,7 @@ import 'home_screen.dart';
 import 'income/add_income_page.dart';
 import 'others/f_ques_answer_page.dart';
 import 'others/logout_page.dart';
-import 'others/NotificationPage.dart';
+import 'others/Setting.dart';
 
 class MainScreenPage extends StatefulWidget {
   late  DrawerSections currentPage;
@@ -24,8 +23,19 @@ class MainScreenPage extends StatefulWidget {
 }
 
 class _MainScreenPageState extends State<MainScreenPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  //var userData= FirebaseFirestore.instance.collection("/userdata").doc("uid").get();
+  getCurrentUser(){
+    final User? user =_auth.currentUser;
+    final uid = user!.uid;
+    final uemail=user.email;
+    print("uID $uid");
+    return uemail;
+  }
 
 
+  final CollectionReference users= FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     var container;
@@ -44,20 +54,13 @@ class _MainScreenPageState extends State<MainScreenPage> {
     else if (widget.currentPage == DrawerSections.categoryChart) {
       container = const CategoryChartPage();
     }
-    // else if (widget.currentPage == DrawerSections.profile) {
-    //   container = const ProfileSettingPage();
-    // }
-    else if (widget.currentPage == DrawerSections.profile) {
-      container = const ProfileSettingPage();
-    }
+
     else if (widget.currentPage == DrawerSections.FQA) {
       container = const QuesAnswerPage();
     } else if (widget.currentPage == DrawerSections.setting) {
       container = const NotificationPage();
     }
-    // else if (widget.currentPage == DrawerSections.setting) {
-    //   container = NewBudget();
-    // }
+
     else if (widget.currentPage == DrawerSections.logOut) {
       container = const LogoutPage();
     }
@@ -73,25 +76,56 @@ class _MainScreenPageState extends State<MainScreenPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-     //          UserAccountsDrawerHeader(accountName: const Text("Homiyo"),
-     //            accountEmail: const Text("homiyo@gmail.com"),
-     //            currentAccountPicture: CircleAvatar(
-     //             child: ClipOval(
-     //              child: Image.network('https://i0.wp.com/theubj.com/wp-content/uploads/2022/09/Chainsaw-Man-Season-1.jpg?resize=750%2C375&ssl=1',
-     //              fit: BoxFit.cover,width: 90,height: 90,
-     //              )
-     //             )
-     // ),
-     //
-     //      decoration: const BoxDecoration(
-     //        color: Colors.teal,
-     //          ),
-     //          ),
-              SizedBox(
-                height: 180,
-                width: 100,
-               // child: ProfileSettingPage(),
+                 UserAccountsDrawerHeader(
+                  accountName: Text(""),
+            //       StreamBuilder(
+            //         stream: FirebaseAuth.instance.authStateChanges(),
+            //        builder: (context,snapshot){
+            //       if(snapshot.connectionState!= ConnectionState.active){
+            //         return Center(
+            //        child: CircularProgressIndicator(),
+            //         );
+            //       }
+            //       final user=snapshot.data;
+            //       final uid = user!.uid;
+            //       if(user!= null){
+            //         print(user);
+            //         CollectionReference users= FirebaseFirestore.instance.collection('users');
+            //         return FutureBuilder<DocumentSnapshot>(
+            //        future: users.doc(uid).get(),
+            //        builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot){
+            //          if(snapshot.hasError){
+            //            return Text("Something went wrong");
+            //          }
+            //          if(snapshot.hasData && !snapshot.data!.exists){
+            //            return Text("Document does not exist");
+            //          }
+            //          if(snapshot.connectionState==ConnectionState.done){
+            //            Map<String,dynamic>data=snapshot.data!.data() as Map<String,dynamic>;
+            //            return  Text("${data['name']}",style: TextStyle(fontSize: 16));
+            //          }
+            //          return Text("Loading");
+            //        },
+            //         );
+            //       }
+            //       else{
+            //         return Text("user is not logged in");
+            //       }
+            //     },
+            // ),
+                  accountEmail: Text(''),
+                  //Text(getCurrentUser(),style: TextStyle(fontSize: 16),),
+          decoration: const BoxDecoration(
+            color: kPrimaryColor,
+              image: DecorationImage(
+                  image: AssetImage('assets/images/expense.png'),
+                  fit: BoxFit.fitHeight,)
+                ),
+                ),
 
+              SizedBox(
+                height: 10,
+                width: 100,
               ),
               MyDrawerList(),
             ],
@@ -120,18 +154,15 @@ class _MainScreenPageState extends State<MainScreenPage> {
               widget.currentPage == DrawerSections.budget ? true : false),
           menuItem(6, "Category Chart", Icons.pie_chart,
               widget.currentPage == DrawerSections.categoryChart ? true : false),
-          menuItem(7, " Profile", Icons.payments,
-              widget.currentPage == DrawerSections.profile ? true : false),
-          const Divider(),
-          // menuItem(8, "FQA", Icons.question_answer,
-          //     widget.currentPage == DrawerSections.FQA ? true : false),
-          menuItem(8, " Setting", Icons.settings,
-              widget.currentPage == DrawerSections.setting ? true : false),
-          // menuItem(9, " Ruff", Icons.gavel_rounded,
-          //     widget.currentPage == DrawerSections.ruff ? true : false),
+
           const Divider(),
 
-          menuItem(9, "Logout", Icons.exit_to_app,
+          menuItem(7, " Setting", Icons.settings,
+              widget.currentPage == DrawerSections.setting ? true : false),
+
+          const Divider(),
+
+          menuItem(8, "Logout", Icons.exit_to_app,
               widget.currentPage == DrawerSections.logOut ? true : false),
         ],
       ),
@@ -142,14 +173,11 @@ class _MainScreenPageState extends State<MainScreenPage> {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          // final prefs= await SharedPreferences.getInstance();
-          // prefs.setBool(('isLoggedIn'), false);
           Navigator.pop(context);
           setState(() {
             if (id == 1) {
               widget.currentPage = DrawerSections.home;
             } else if (id == 2) {
-              //widget.currentPage = DrawerSections.addExpense;
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
@@ -157,7 +185,6 @@ class _MainScreenPageState extends State<MainScreenPage> {
                   })
               );
             } else if (id == 3) {
-              //widget.currentPage = DrawerSections.transactionFilter;
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
@@ -165,12 +192,10 @@ class _MainScreenPageState extends State<MainScreenPage> {
                   })
               );
             } else if (id == 4) {
-              //widget.currentPage = DrawerSections.addIncome;
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return const TransactionPage();
-
                   })
               );
             }
@@ -178,9 +203,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                   // return BudgetPage();
                     return NewBudget();
-                    //return const GridSearchScreen();
                   })
               );
             }
@@ -189,54 +212,26 @@ class _MainScreenPageState extends State<MainScreenPage> {
                   context,
                   MaterialPageRoute(builder: (context) {
                     return const CategoryChartPage();
-                    //return const GridSearchScreen();
                   })
               );
-             // widget.currentPage = DrawerSections.categoryChart;
             }
+
             else if (id == 7) {
-             // widget.currentPage = DrawerSections.paymentMethod;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const ProfileSettingPage();
-                    //return const GridSearchScreen();
-                  })
-              );
-            }
-            // else if (id == 8) {
-            //   widget.currentPage = DrawerSections.FQA;
-            // }
-            else if (id == 8) {
-              //widget.currentPage = DrawerSections.notification;
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return const NotificationPage();
-                    //return const GridSearchScreen();
                   })
               );
             }
-            // else if (id == 9) {
-            //   //widget.currentPage = DrawerSections.notification;
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) {
-            //         return NewBudget();
-            //         //return const GridSearchScreen();
-            //       })
-            //   );
-            // }
-            else if (id == 9) {
+            else if (id == 8) {
               _signOut();
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return const WelcomeScreen();
-                    //return const GridSearchScreen();
                   })
               );
-           //   widget.currentPage = DrawerSections.logOut;
             }
           });
         },
@@ -261,10 +256,8 @@ enum DrawerSections {
   transactionFilter,
   budget,
   categoryChart,
-  profile,
   FQA,
   setting,
-  //ruff,
   logOut,
 }
 

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_app/Screens/Home/category/service/ExpenseIncomeService.dart';
 import 'package:expense_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +27,18 @@ class AddExpensePage extends StatefulWidget {
 }
 
 class _AddExpensePageState extends State<AddExpensePage> {
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-  // getCurrentUser(){
-  //   final User? user =_auth.currentUser;
-  //   final uid = user!.uid;
-  //   //final uemail=user.email;
-  //   print("uID $uid");
-  //   return uid;
+ //  final FirebaseAuth _auth = FirebaseAuth.instance;
+ //  getCurrentUser(){
+ //    final User? user =_auth.currentUser;
+ //    final uid = user!.uid;
+ //    //final uemail=user.email;
+ //    print("uID $uid");
+ //    return uid;
  // }
-   final CollectionReference _addExpense =
-   FirebaseFirestore.instance.collection('add_expense');
+  final CollectionReference _addExpense=
+  FirebaseFirestore.instance.collection('add_expense');
+
+  //late final CollectionReference _addExpense;
   static final _expense=TextEditingController();
   static final _category=TextEditingController();
   static final _dates=TextEditingController();
@@ -48,9 +52,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
   ];
    String _payment='Select Payment Method';
   int iconId = 0;
- // late String id="";
+ late String id;
+
   @override
   void initState(){
+   // id=getCurrentUser();
     _dates.text="";
     _times.text = "";
     _category.text= widget.category.name;
@@ -62,8 +68,10 @@ class _AddExpensePageState extends State<AddExpensePage> {
       }
     }
     );
+
+    //_addExpense= FirebaseFirestore.instance.collection('add_expense').doc(id).collection('add_expense');
     super.initState();
-    //id = getCurrentUser();
+ //   id = getCurrentUser();
    // _addExpense = FirebaseFirestore.instance.collection(id).doc("add_expense").collection(id);
     _expense.clear();
     _notes.clear();
@@ -382,9 +390,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                         Navigator.of(context).pop();
                                         Navigator.push(context, MaterialPageRoute(builder: (context) {
                                           return const TransactionPage();
-                                        }
+                                        },
+
                                         )
                                         );
+
                                       }
                                     }
                                     else{

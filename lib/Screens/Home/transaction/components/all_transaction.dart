@@ -11,25 +11,18 @@ import 'package:pdf/widgets.dart' as pw;
 import '../../../../constants.dart';
 import '../../../../models/expense_income.dart';
 import '../transaction_filter_page.dart';
-
-
 class AllTransaction extends StatefulWidget {
   const AllTransaction({Key? key}) : super(key: key);
-
   @override
   State<AllTransaction> createState() => _AllTransactionState();
 }
-
 class _AllTransactionState extends State<AllTransaction> {
   double totalIncome = 0;
   double totalExpense = 0;
   double balance = 0;
-
   ExpenseIncomeService expenseIncomeService = ExpenseIncomeService();
   List<ExpenseIncome> expenseIncomeList = [];
-
   // final FirebaseAuth _auth = FirebaseAuth.instance;
-  //
   // getCurrentUser(){
   //   final User? user =_auth.currentUser;
   //   final uid = user!.uid;
@@ -37,9 +30,7 @@ class _AllTransactionState extends State<AllTransaction> {
   //   print("uID $uid");
   //   return uid;
   // }
-
-
- //  late String id='';
+   late String id;
   @override
   void initState() {
     // TODO: implement initState
@@ -50,41 +41,37 @@ class _AllTransactionState extends State<AllTransaction> {
           expenseIncomeList = value;
           for (var element in value) {
             if (element.expense != null) {
-              totalExpense += element.expense ?? 0;
+              totalExpense += element.expense;
             }
             if (element.income != null) {
-              totalIncome += element.income ?? 0;
+              totalIncome += element.income;
             }
           }
         }
       });}
     });
-   // id=getCurrentUser();
-   // _addIncome= FirebaseFirestore.instance.collection(id).doc("add_income").collection(id);
-   // _addExpense = FirebaseFirestore.instance.collection(id).doc("add_expense").collection(id);
+  //id=getCurrentUser();
+  //_addIncome= FirebaseFirestore.instance.collection('add_income').doc(id).collection('add_income');
+  //_addExpense = FirebaseFirestore.instance.collection('add_expense').doc(id).collection('add_expense');
     super.initState();
   }
-
   @override
   void dispose() {
     super.dispose();
   }
-
-   final CollectionReference _addIncome =
-      FirebaseFirestore.instance.collection('add_income');
+   //late final CollectionReference _addIncome ;
+  final CollectionReference _addIncome = FirebaseFirestore.instance.collection('add_income');
   final TextEditingController _datesIncome = TextEditingController();
   final TextEditingController _timesIncome = TextEditingController();
   final TextEditingController _notesIncome = TextEditingController();
   final TextEditingController _categoryIncome = TextEditingController();
   final TextEditingController _incomeIncome = TextEditingController();
-
   Future<void> _delete(String incomeId) async {
     await _addIncome.doc(incomeId).delete();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a Transaction')));
     Navigator.pop(context);
   }
-
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
       _datesIncome.text = documentSnapshot['dates'].toString();
@@ -115,8 +102,8 @@ class _AllTransactionState extends State<AllTransaction> {
                       children: [
                         Row(
                           children: [
-                            Text('Edit Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: kPrimaryColor),),
-                            Spacer(),
+                            const Text('Edit Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: kPrimaryColor),),
+                            const Spacer(),
                             Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: IconButton(
@@ -125,14 +112,14 @@ class _AllTransactionState extends State<AllTransaction> {
                                           context: context,
                                           builder: (context)=>
                                               AlertDialog(
-                                                title: Text('Delete'),
-                                                content: Text('Do you want to delete this transaction record ?'),
+                                                title: const Text('Delete'),
+                                                content: const Text('Do you want to delete this transaction record ?'),
                                                 actions: <Widget>[
                                                   TextButton(
                                                       onPressed: (){
                                                         Navigator.of(context, rootNavigator: true).pop(false);
                                                       },
-                                                      child: Text('No')),
+                                                      child: const Text('No')),
                                                   TextButton(
                                                       onPressed: (){
                                                         _delete(documentSnapshot!.id);
@@ -143,20 +130,20 @@ class _AllTransactionState extends State<AllTransaction> {
                                                         )
                                                         );
                                                       },
-                                                      child: Text('Yes'))
+                                                      child: const Text('Yes'))
                                                 ],
                                               )
                                       ),
-                                  icon: Icon(Icons.delete,color: kPrimaryColor,size: 30,)),
+                                  icon: const Icon(Icons.delete,color: kPrimaryColor,size: 30,)),
                             )
                           ],
-                        ),Divider(),
+                        ),const Divider(),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _datesIncome,
                             keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(labelText: 'Dates',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Dates',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.teal,
                             readOnly: true,
                             onTap: () async {
@@ -175,11 +162,11 @@ class _AllTransactionState extends State<AllTransaction> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _timesIncome,
                             keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(labelText: 'Times',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Times',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.teal,
                             readOnly: true,
                             onTap: () async {
@@ -196,40 +183,40 @@ class _AllTransactionState extends State<AllTransaction> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _notesIncome,
                             keyboardType: TextInputType.text,
-                            decoration: InputDecoration(labelText: 'Notes',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Notes',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.teal,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _categoryIncome,
                             keyboardType: TextInputType.none,
-                            decoration: InputDecoration(labelText: 'Category',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Category',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.teal,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _incomeIncome,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(labelText: 'Income',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Income',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.teal,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 80),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: kPrimaryColor
+                                backgroundColor: kPrimaryColor
                             ),
                             onPressed: () async {
                               final String dates = _datesIncome.text;
@@ -255,12 +242,11 @@ class _AllTransactionState extends State<AllTransaction> {
                                 _categoryIncome.text = '';
                                 double.parse(_incomeIncome.text);
                               }
-                              ;
                             },
-                            child: Text('Update',),
+                            child: const Text('Update',),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                       ],
@@ -272,23 +258,20 @@ class _AllTransactionState extends State<AllTransaction> {
           );
         });
   }
-
-  final CollectionReference _addExpense =
-       FirebaseFirestore.instance.collection('add_expense');
+  //late final CollectionReference _addExpense;
+  final CollectionReference _addExpense = FirebaseFirestore.instance.collection('add_expense');
   final TextEditingController _datesExpense = TextEditingController();
   final TextEditingController _timesExpense = TextEditingController();
   final TextEditingController _paymentExpense = TextEditingController();
   final TextEditingController _notesExpense = TextEditingController();
   final TextEditingController _categoryExpense = TextEditingController();
   final TextEditingController _expenseExpense = TextEditingController();
-
   Future<void> _deletee(String expenseId) async {
     await _addExpense.doc(expenseId).delete();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a Transaction')));
     //  Navigator.pop(context);
   }
-
   Future<void> _updatee([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
       _datesExpense.text = documentSnapshot['dates'].toString();
@@ -321,8 +304,8 @@ class _AllTransactionState extends State<AllTransaction> {
                       children: [
                         Row(
                           children: [
-                            Text('Edit Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: kPrimaryColor),),
-                            Spacer(),
+                            const Text('Edit Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: kPrimaryColor),),
+                            const Spacer(),
                             Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: IconButton(
@@ -331,14 +314,14 @@ class _AllTransactionState extends State<AllTransaction> {
                                           context: context,
                                           builder: (context)=>
                                               AlertDialog(
-                                                title: Text('Delete'),
-                                                content: Text('Do you want to delete this transaction record ?'),
+                                                title: const Text('Delete'),
+                                                content: const Text('Do you want to delete this transaction record ?'),
                                                 actions: <Widget>[
                                                   TextButton(
                                                       onPressed: (){
                                                         Navigator.of(context, rootNavigator: true).pop(false);
                                                       },
-                                                      child: Text('No')),
+                                                      child: const Text('No')),
                                                   TextButton(
                                                       onPressed: (){
                                                         _deletee(documentSnapshot!.id);
@@ -349,20 +332,20 @@ class _AllTransactionState extends State<AllTransaction> {
                                                         )
                                                         );
                                                       },
-                                                      child: Text('Yes'))
+                                                      child: const Text('Yes'))
                                                 ],
                                               )
                                       ),
-                                  icon: Icon(Icons.delete,color: kPrimaryColor,size: 30,)),
+                                  icon: const Icon(Icons.delete,color: kPrimaryColor,size: 30,)),
                             )
                           ],
-                        ),Divider(),
+                        ),const Divider(),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _datesExpense,
                             keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(labelText: 'Dates',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Dates',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                             readOnly: true,
                             onTap: () async {
@@ -381,11 +364,11 @@ class _AllTransactionState extends State<AllTransaction> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _timesExpense,
                             keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(labelText: 'Times',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Times',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                             readOnly: true,
                             onTap: () async {
@@ -402,43 +385,43 @@ class _AllTransactionState extends State<AllTransaction> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _paymentExpense,
                             keyboardType: TextInputType.none,
                             decoration:
-                                InputDecoration(labelText: 'Payment Method',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                                const InputDecoration(labelText: 'Payment Method',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _notesExpense,
                             keyboardType: TextInputType.text,
-                            decoration: InputDecoration(labelText: 'Notes',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Notes',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _categoryExpense,
                             keyboardType: TextInputType.none,
-                            decoration: InputDecoration(labelText: 'Category',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Category',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: TextField(
                             controller: _expenseExpense,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(labelText: 'Expense',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
+                            decoration: const InputDecoration(labelText: 'Expense',floatingLabelAlignment: FloatingLabelAlignment.center,fillColor: KPrimaryMidLevelColor),
                             cursorColor: Colors.grey.shade200,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                           width: 20,
                         ),
@@ -446,7 +429,7 @@ class _AllTransactionState extends State<AllTransaction> {
                           padding: const EdgeInsets.symmetric(horizontal: 80),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: kPrimaryColor
+                              backgroundColor: kPrimaryColor
                             ),
                             onPressed: () async {
                               final String dates = _datesExpense.text;
@@ -477,10 +460,10 @@ class _AllTransactionState extends State<AllTransaction> {
                               }
                               ;
                             },
-                            child: Text('Update',),
+                            child: const Text('Update',),
                           ),
                         ),
-                         SizedBox(height: 10,),
+                         const SizedBox(height: 10,),
                       ],
                     ),
                   ),
@@ -490,7 +473,6 @@ class _AllTransactionState extends State<AllTransaction> {
           );
         });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -510,7 +492,7 @@ class _AllTransactionState extends State<AllTransaction> {
                         fontSize: 13)),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
               width: 74,
               child: const Text('Category',
@@ -519,7 +501,7 @@ class _AllTransactionState extends State<AllTransaction> {
                       fontWeight: FontWeight.normal,
                       fontSize: 13)),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
               width: 66,
               child: Text(
@@ -530,7 +512,7 @@ class _AllTransactionState extends State<AllTransaction> {
                     fontSize: 13),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
               width: 66,
               child: Text(
@@ -639,13 +621,13 @@ class _AllTransactionState extends State<AllTransaction> {
                           ListView.builder(
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
-                              physics: ScrollPhysics(),
+                              physics: const ScrollPhysics(),
                               itemCount: streamSnapshots.data!.docs.length,
                               itemBuilder: (BuildContext context, index) {
                                 final DocumentSnapshot documentSnapshot1 =
                                     streamSnapshots.data!.docs[index];
                                 return Column(children: <Widget>[
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Card(
@@ -669,7 +651,7 @@ class _AllTransactionState extends State<AllTransaction> {
                                             child: Center(
                                               child: Text(
                                                 "${documentSnapshot1.get('category')}",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.black),
                                                 textAlign: TextAlign.center,
                                               ),
@@ -677,7 +659,7 @@ class _AllTransactionState extends State<AllTransaction> {
                                           ),
                                           Container(
                                             width: 75,
-                                            child: Center(
+                                            child: const Center(
                                               child: Text("0.0",style: TextStyle(color: Colors.green)),
                                             ),
                                           ),
@@ -706,7 +688,7 @@ class _AllTransactionState extends State<AllTransaction> {
               ),
             ),
           ),
-          Divider(
+          const Divider(
             thickness: 2,
           ),
           Expanded(
@@ -715,7 +697,6 @@ class _AllTransactionState extends State<AllTransaction> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    // Text("Total Transaction"),
                     Container(
                       height: 50,
                       width: 105,
@@ -763,7 +744,7 @@ class _AllTransactionState extends State<AllTransaction> {
                           borderRadius: BorderRadius.zero),
                       child: Text(
                         "Balance  \n${balance = totalIncome - totalExpense}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,
                         ),
@@ -779,10 +760,9 @@ class _AllTransactionState extends State<AllTransaction> {
               foregroundColor: Colors.white,
               backgroundColor: kPrimaryColor,
               onPressed: () =>download(),
-              child: Icon(Icons.picture_as_pdf_rounded),
+              child: const Icon(Icons.picture_as_pdf_rounded),
             ),
     );
-
   }
   Future<void> download() async {
     final pdf = pw.Document();
@@ -793,12 +773,10 @@ class _AllTransactionState extends State<AllTransaction> {
         build: (pw.Context context )=>[
           pw.Center(
             child: pw.Header(text: 'All Transaction\n\n\n'),
-
           ),
           pw.Center(
             child: pw.Text('Date: ${DateTime.now()}',style: pw.TextStyle(
               font:  pw.Font.ttf(data),color: PdfColors.black,)),
-
           ),
           pw.Divider(),
             //pw.Text('expenseIncomeList ${expenseIncomeList.first.expense}'),
@@ -825,8 +803,6 @@ class _AllTransactionState extends State<AllTransaction> {
               ],),
             ],
             ),
-
-
             pw.Divider(),
               pw.Table(
               children: [
@@ -837,8 +813,8 @@ class _AllTransactionState extends State<AllTransaction> {
                           child: pw.Column(
                               crossAxisAlignment: pw.CrossAxisAlignment.end,
                               children: [
-                                pw.Text('Total Income  ${totalIncome}\n',style: pw.TextStyle(font:  pw.Font.ttf(data))),
-                                pw.Text('Total Expense  ${totalExpense}\n',style: pw.TextStyle(font:  pw.Font.ttf(data))),
+                                pw.Text('Total Income  $totalIncome\n',style: pw.TextStyle(font:  pw.Font.ttf(data))),
+                                pw.Text('Total Expense  $totalExpense\n',style: pw.TextStyle(font:  pw.Font.ttf(data))),
                                 pw.Text('Balance  $balance\n',style: pw.TextStyle(font:  pw.Font.ttf(data))),
                               ]
                           )
@@ -848,7 +824,7 @@ class _AllTransactionState extends State<AllTransaction> {
               ]
               ),
           pw.Footer(
-            padding: pw.EdgeInsets.all(8.0)
+            padding: const pw.EdgeInsets.all(8.0)
           )
         ],
       ),
@@ -858,8 +834,6 @@ class _AllTransactionState extends State<AllTransaction> {
     final file = File(path);
     await file.writeAsBytes(await pdf.save());
     await OpenFile.open(file.path);
-
     print("file   $file");
   }
-
 }

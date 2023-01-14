@@ -149,7 +149,7 @@ class _MonthlyIncomePieChartState extends State<MonthlyIncomePieChart> {
         body: Column(
           children: <Widget>[
             SizedBox(
-              height: 30,width: 400,
+              height: 30,width: 380,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -178,6 +178,9 @@ class _MonthlyIncomePieChartState extends State<MonthlyIncomePieChart> {
               ),
             ),
             const Divider(thickness: 1.3,),
+            SizedBox(
+              width: 10,
+            ),
             if(getCategoryData().isNotEmpty)...[
               Card(
                 child: SizedBox(
